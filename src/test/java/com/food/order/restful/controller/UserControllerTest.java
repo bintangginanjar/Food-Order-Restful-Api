@@ -60,4 +60,26 @@ public class UserControllerTest {
             assertEquals(true, response.getStatus());
         });
     }
+
+    @Test
+    void testCreateSuccessBlankRequest() throws Exception {
+        RegisterUserRequest request = new RegisterUserRequest();
+        request.setUsername("");
+        request.setPassword("");
+        request.setName("");
+
+        mockMvc.perform(
+                post("/api/users")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))                        
+        ).andExpectAll(
+                status().isBadRequest()
+        ).andDo(result -> {
+                WebResponse<UserResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertEquals(false, response.getStatus());
+        });
+    }
 }

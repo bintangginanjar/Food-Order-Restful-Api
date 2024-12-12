@@ -27,11 +27,12 @@ public class UserController {
         produces = MediaType.APPLICATION_JSON_VALUE
     )
     public WebResponse<UserResponse> create(@RequestBody RegisterUserRequest request) {
-        userService.create(request);
+        UserResponse response = userService.create(request);
 
         return WebResponse.<UserResponse>builder()
                                         .status(true)
                                         .messages("User registration success")
+                                        .data(response)
                                         .build();        
     }
 

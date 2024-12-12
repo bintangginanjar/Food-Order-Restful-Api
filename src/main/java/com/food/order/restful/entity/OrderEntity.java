@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "order")
+@Table(name = "orders")
 public class OrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,6 +40,6 @@ public class OrderEntity {
     @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
     private UserEntity userEntity;
 
-    @OneToMany(mappedBy = "orderEntity", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "orderEntity", cascade = CascadeType.REMOVE)
     private List<OrderItemEntity> orderItemEntity;
 }

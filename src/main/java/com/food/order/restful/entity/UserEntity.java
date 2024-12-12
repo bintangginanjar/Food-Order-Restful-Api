@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +34,7 @@ public class UserEntity {
     @Column(name = "token_expired_at")
     private Long tokenExpiredAt;
 
-    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
     private List<OrderEntity> orders;
 
     /*

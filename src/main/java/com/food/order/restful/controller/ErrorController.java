@@ -17,19 +17,28 @@ public class ErrorController {
     @ExceptionHandler
     public ResponseEntity<WebResponse<String>> constraintViolationException(ConstraintViolationException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(WebResponse.<String>builder().errors(exception.getMessage()).build());
+                .body(WebResponse.<String>builder()
+                                            .status(false)
+                                            .errors(exception.getMessage())
+                                            .build());
     }
 
     @ExceptionHandler
     public ResponseEntity<WebResponse<String>> apiException(ResponseStatusException exception) {
         return ResponseEntity.status(exception.getStatusCode())
-                .body(WebResponse.<String>builder().errors(exception.getReason()).build());
+                .body(WebResponse.<String>builder()
+                                            .status(false)
+                                            .errors(exception.getReason())
+                                            .build());
     }
 
     @ExceptionHandler
     public ResponseEntity<WebResponse<String>> handlerNotFoundException(NoHandlerFoundException exception) {
         return ResponseEntity.status(exception.getStatusCode())
-                .body(WebResponse.<String>builder().errors(exception.getMessage()).build());
+                .body(WebResponse.<String>builder()
+                                            .status(false)
+                                            .errors(exception.getMessage())
+                                            .build());
     }
 
 }
