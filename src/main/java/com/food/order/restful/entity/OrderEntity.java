@@ -40,6 +40,6 @@ public class OrderEntity {
     @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
     private UserEntity userEntity;
 
-    @OneToMany(mappedBy = "orderItemEntity", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "orderEntity", cascade = CascadeType.ALL)
     private List<OrderItemEntity> orderItemEntity;
 }

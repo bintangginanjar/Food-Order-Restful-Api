@@ -12,7 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.food.order.restful.entity.UserEntity;
 import com.food.order.restful.mapper.UserResponseMapper;
 import com.food.order.restful.model.UpdateUserRequest;
-import com.food.order.restful.model.UserCreateRequest;
+import com.food.order.restful.model.RegisterUserRequest;
 import com.food.order.restful.model.UserResponse;
 import com.food.order.restful.repository.UserRepository;
 
@@ -34,7 +34,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponse create(UserCreateRequest request) {  
+    public UserResponse create(RegisterUserRequest request) {  
         validationService.validate(request);
         
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
