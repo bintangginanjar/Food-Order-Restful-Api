@@ -53,6 +53,8 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserResponse get(UserEntity user) {
+        log.info("USER {}", user);
+
         return UserResponseMapper.ToUserResponseMapper(user);
     }
 
