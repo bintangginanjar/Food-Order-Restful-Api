@@ -29,4 +29,10 @@ public class UserEntity {
 
     @Column(name = "token_expired_at")
     private Long tokenExpiredAt;
+
+    /*
+    @OneToOne
+    @JoinColumn(name = "profile_id", referencedColumnName = "id")
+    private ProfileEntity profileEntity;
+    */
 }
