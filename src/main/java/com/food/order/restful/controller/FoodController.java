@@ -13,6 +13,8 @@ import com.food.order.restful.service.FoodService;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 
 @RestController
@@ -39,6 +41,23 @@ public class FoodController {
         return WebResponse.<FoodResponse>builder()
                                         .status(true)
                                         .messages("Food registration success")
+                                        .data(response)
+                                        .build();
+    }
+    
+    @GetMapping(
+        path = "/api/categories/{categoryId}/foods/{foodId}",        
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public WebResponse<FoodResponse> get(UserEntity user,                                            
+                                            @PathVariable("categoryId") String categoryId,
+                                            @PathVariable("foodId") String foodId) {
+        
+        FoodResponse response = foodService.get(categoryId, foodId);
+
+        return WebResponse.<FoodResponse>builder()
+                                        .status(true)
+                                        .messages("Food fetching success")
                                         .data(response)
                                         .build();
     }

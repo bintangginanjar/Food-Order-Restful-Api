@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.food.order.restful.entity.CategoryEntity;
@@ -34,6 +35,7 @@ public class FoodService {
         this.validationService = validationService;
     }
 
+    @Transactional
     public FoodResponse create(UserEntity user, RegisterFoodRequest request, String strCategoryId) {
         validationService.validate(request);
 
@@ -60,6 +62,27 @@ public class FoodService {
         food.setPhotoUrl(request.getPhotoUrl());
         food.setCategoryEntity(category);
         foodRepository.save(food);
+
+        return FoodResponseMapper.ToFoodResponse(food);
+    }
+
+    @Transactional(readOnly = true)
+    public FoodResponse get(String strCategoryId, String strFoodId) {
+        Integer categoryId;
+        Integer foodId;
+
+        try {
+            categoryId = Integer.parseInt(strCategoryId);
+            foodId = Integer.parseInt(strFoodId);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad category id");
+        }
+
+        CategoryEntity category = categoryRepository.findById(categoryId)
+                                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
+
+        FoodEntity food = foodRepository.findFirstByCategoryEntityAndId(category, foodId)
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Food not found"));
 
         return FoodResponseMapper.ToFoodResponse(food);
     }
