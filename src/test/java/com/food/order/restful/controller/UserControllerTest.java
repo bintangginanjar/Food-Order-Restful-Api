@@ -102,7 +102,7 @@ public class UserControllerTest {
         mockMvc.perform(
                 get("/api/users/current")
                         .accept(MediaType.APPLICATION_JSON)
-                        .header("X-API-TOKEN", "test")                                         
+                        .header("X-API-TOKEN", "test")                                     
         ).andExpectAll(
                 status().isOk()
         ).andDo(result -> {

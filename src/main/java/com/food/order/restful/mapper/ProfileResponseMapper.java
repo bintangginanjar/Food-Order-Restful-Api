@@ -7,6 +7,7 @@ public class ProfileResponseMapper {
 
     public static ProfileResponse ToProfileResponseMapper(ProfileEntity profile) {
         return ProfileResponse.builder()
+                .id(profile.getId())
                 .firstname(profile.getFirstname())
                 .lastname(profile.getLastname())
                 .email(profile.getEmail())
