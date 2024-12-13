@@ -16,6 +16,7 @@ import com.food.order.restful.entity.ProfileEntity;
 import com.food.order.restful.entity.UserEntity;
 import com.food.order.restful.model.ProfileResponse;
 import com.food.order.restful.model.RegisterProfileRequest;
+import com.food.order.restful.model.UpdateProfileRequest;
 import com.food.order.restful.model.WebResponse;
 import com.food.order.restful.repository.ProfileRepository;
 import com.food.order.restful.repository.UserRepository;
@@ -59,7 +60,7 @@ public class ProfileControllerTest {
     @Test
     void testCreateProfileSuccess() throws Exception {
         RegisterProfileRequest request = new RegisterProfileRequest();
-        request.setFirstname("Bintang");;
+        request.setFirstname("Bintang");
         request.setLastname("Ginanjar");
         request.setEmail("email@mail.com");
         request.setAddress("Pasirluyu");
@@ -88,7 +89,7 @@ public class ProfileControllerTest {
     @Test
     void testCreateProfileBlank() throws Exception {
         RegisterProfileRequest request = new RegisterProfileRequest();
-        request.setFirstname("");;
+        request.setFirstname("");
         request.setLastname("");
         request.setEmail("");
         request.setAddress("Pasirluyu");
@@ -117,7 +118,7 @@ public class ProfileControllerTest {
     @Test
     void testCreateProfileInvalidToken() throws Exception {
         RegisterProfileRequest request = new RegisterProfileRequest();
-        request.setFirstname("Bintang");;
+        request.setFirstname("Bintang");
         request.setLastname("Ginanjar");
         request.setEmail("email@mail.com");
         request.setAddress("Pasirluyu");
@@ -146,7 +147,7 @@ public class ProfileControllerTest {
     @Test
     void testCreateProfileTokenNotSent() throws Exception {
         RegisterProfileRequest request = new RegisterProfileRequest();
-        request.setFirstname("");;
+        request.setFirstname("");
         request.setLastname("");
         request.setEmail("");
         request.setAddress("Pasirluyu");
@@ -176,7 +177,7 @@ public class ProfileControllerTest {
         UserEntity user = userRepository.findByUsername("test").orElse(null);
 
         ProfileEntity profile = new ProfileEntity();
-        profile.setFirstname("Bintang");;
+        profile.setFirstname("Bintang");
         profile.setLastname("Ginanjar");
         profile.setEmail("email@mail.com");
         profile.setAddress("Pasirluyu");
@@ -208,7 +209,7 @@ public class ProfileControllerTest {
         UserEntity user = userRepository.findByUsername("test").orElse(null);
 
         ProfileEntity profile = new ProfileEntity();
-        profile.setFirstname("Bintang");;
+        profile.setFirstname("Bintang");
         profile.setLastname("Ginanjar");
         profile.setEmail("email@mail.com");
         profile.setAddress("Pasirluyu");
@@ -240,7 +241,7 @@ public class ProfileControllerTest {
         UserEntity user = userRepository.findByUsername("test").orElse(null);
 
         ProfileEntity profile = new ProfileEntity();
-        profile.setFirstname("Bintang");;
+        profile.setFirstname("Bintang");
         profile.setLastname("Ginanjar");
         profile.setEmail("email@mail.com");
         profile.setAddress("Pasirluyu");
@@ -257,6 +258,93 @@ public class ProfileControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)                        
         ).andExpectAll(
                 status().isUnauthorized()
+        ).andDo(result -> {
+                WebResponse<ProfileResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertEquals(false, response.getStatus());
+            assertNotNull(response.getErrors());
+        });
+    }
+
+    @Test
+    void testUpdateProfileSuccess() throws Exception {
+        UserEntity user = userRepository.findByUsername("test").orElse(null);
+
+        ProfileEntity profile = new ProfileEntity();
+        profile.setFirstname("Bintang");;
+        profile.setLastname("Ginanjar");
+        profile.setEmail("email@mail.com");
+        profile.setAddress("Pasirluyu");
+        profile.setPhoneNumber("123456");
+        profile.setCity("Bandung");
+        profile.setProvince("Jawa Barat");
+        profile.setPostalCode("40254");
+        profile.setUserEntity(user);  
+        profileRepository.save(profile);
+
+        UpdateProfileRequest request = new UpdateProfileRequest();
+        request.setFirstname("Dimas");
+        request.setLastname("Al Rasyid Ginanjar");
+        request.setEmail("email@mail.com");
+        request.setAddress("Pasirluyu");
+        request.setPhoneNumber("56789");
+        request.setCity("Bandung");
+        request.setProvince("Jawa Barat");
+        request.setPostalCode("40254");      
+
+        mockMvc.perform(
+                patch("/api/profiles")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)) 
+                        .header("X-API-TOKEN", "test")                       
+        ).andExpectAll(
+                status().isOk()
+        ).andDo(result -> {
+                WebResponse<ProfileResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertEquals(true, response.getStatus());
+            assertNull(response.getErrors());
+            assertEquals(request.getFirstname(), response.getData().getFirstname());
+            assertEquals(request.getLastname(), response.getData().getLastname());
+            assertEquals(request.getEmail(), response.getData().getEmail());
+            assertEquals(request.getAddress(), response.getData().getAddress());
+            assertEquals(request.getPhoneNumber(), response.getData().getPhoneNumber());
+            assertEquals(request.getCity(), response.getData().getCity());
+            assertEquals(request.getProvince(), response.getData().getProvince());
+            assertEquals(request.getPostalCode(), response.getData().getPostalCode());
+        });
+    }
+
+    @Test
+    void testUpdateProfileWrongEmail() throws Exception {
+        UserEntity user = userRepository.findByUsername("test").orElse(null);
+
+        ProfileEntity profile = new ProfileEntity();
+        profile.setFirstname("Bintang");;
+        profile.setLastname("Ginanjar");
+        profile.setEmail("email@mail.com");
+        profile.setAddress("Pasirluyu");
+        profile.setPhoneNumber("123456");
+        profile.setCity("Bandung");
+        profile.setProvince("Jawa Barat");
+        profile.setPostalCode("40254");
+        profile.setUserEntity(user);  
+        profileRepository.save(profile);
+
+        UpdateProfileRequest request = new UpdateProfileRequest();        
+        request.setEmail("emailcom");             
+
+        mockMvc.perform(
+                patch("/api/profiles")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)) 
+                        .header("X-API-TOKEN", "test")                       
+        ).andExpectAll(
+                status().isBadRequest()
         ).andDo(result -> {
                 WebResponse<ProfileResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
             });

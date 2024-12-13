@@ -1,5 +1,7 @@
 package com.food.order.restful.service;
 
+import java.util.Objects;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -57,6 +59,46 @@ public class ProfileService {
 
     @Transactional
     public ProfileResponse update(UserEntity user, UpdateProfileRequest request) {
-        
+        validationService.validate(request);
+
+        ProfileEntity profile = profileRepository.findByUserEntity(user)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Profile not found"));
+
+        if (Objects.nonNull(request.getFirstname())) {
+            profile.setFirstname(request.getFirstname());
+        }
+
+        if (Objects.nonNull(request.getLastname())) {
+            profile.setLastname(request.getLastname());
+        }
+
+        if (Objects.nonNull(request.getEmail())) {
+            profile.setEmail(request.getEmail());
+        }
+
+        if (Objects.nonNull(request.getAddress())) {
+            profile.setAddress(request.getAddress());
+        }
+
+        if (Objects.nonNull(request.getPhoneNumber())) {
+            profile.setPhoneNumber(request.getPhoneNumber());
+        }
+
+        if (Objects.nonNull(request.getCity())) {
+            profile.setCity(request.getCity());
+        }
+
+        if (Objects.nonNull(request.getProvince())) {
+            profile.setProvince(request.getProvince());
+        }
+
+        if (Objects.nonNull(request.getPostalCode())) {
+            profile.setPostalCode(request.getPostalCode());
+        }
+
+        profileRepository.save(profile);
+
+        return ProfileResponseMapper.ToProfileResponseMapper(profile);
     }
+
 }

@@ -36,6 +36,8 @@ public class OrderEntity {
     @Column(name = "total_price")
     private Integer totalPrice;
 
+    private String status;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
     private UserEntity userEntity;
