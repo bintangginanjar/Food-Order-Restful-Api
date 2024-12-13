@@ -3,6 +3,7 @@ package com.food.order.restful.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,7 +31,8 @@ public class CategoryController {
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public WebResponse<CategoryResponse> create(UserEntity user, @RequestBody RegisterCategoryRequest request) {
+    public WebResponse<CategoryResponse> create(UserEntity user,
+                                                @RequestBody RegisterCategoryRequest request) {
         CategoryResponse response = categoryService.create(user, request);
 
         return WebResponse.<CategoryResponse>builder()
@@ -44,7 +46,8 @@ public class CategoryController {
         path = "/api/category/{categoryId}",        
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public WebResponse<CategoryResponse> get(UserEntity user, @PathVariable("categoryId") String categoryId) {
+    public WebResponse<CategoryResponse> get(UserEntity user, 
+                                            @PathVariable("categoryId") String categoryId) {
         
         CategoryResponse response = categoryService.get(categoryId);
 
@@ -55,4 +58,20 @@ public class CategoryController {
                                         .build();
     }
     
+    @PutMapping(
+        path = "/api/category/{categoryId}",
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public WebResponse<CategoryResponse> update(UserEntity user, 
+                                                @PathVariable("categoryId") String categoryId, 
+                                                @RequestBody RegisterCategoryRequest request) {
+        CategoryResponse response = categoryService.create(user, request);
+
+        return WebResponse.<CategoryResponse>builder()
+                                        .status(true)
+                                        .messages("Category update success")
+                                        .data(response)
+                                        .build();        
+    }
 }

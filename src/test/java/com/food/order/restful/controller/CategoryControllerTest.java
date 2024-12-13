@@ -152,4 +152,70 @@ public class CategoryControllerTest {
             assertNotNull(response.getErrors());
         });
     }
+
+    @Test
+    void testGetCategorySuccess() throws Exception {
+        CategoryEntity category = new CategoryEntity();
+        category.setName("Main Course");
+        categoryRepository.save(category);
+
+        mockMvc.perform(
+                get("/api/category/" + category.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)                        
+                        .header("X-API-TOKEN", "test")                       
+        ).andExpectAll(
+                status().isOk()
+        ).andDo(result -> {
+                WebResponse<CategoryResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertEquals(true, response.getStatus());
+            assertNull(response.getErrors());
+        });
+    }
+
+    @Test
+    void testGetCategoryBadId() throws Exception {
+        CategoryEntity category = new CategoryEntity();
+        category.setName("Main Course");
+        categoryRepository.save(category);
+
+        mockMvc.perform(
+                get("/api/category/123test")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)                        
+                        .header("X-API-TOKEN", "test")                       
+        ).andExpectAll(
+                status().isBadRequest()
+        ).andDo(result -> {
+                WebResponse<CategoryResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertEquals(false, response.getStatus());
+            assertNotNull(response.getErrors());
+        });
+    }
+
+    @Test
+    void testGetCategoryNotFound() throws Exception {
+        CategoryEntity category = new CategoryEntity();
+        category.setName("Main Course");
+        categoryRepository.save(category);
+
+        mockMvc.perform(
+                get("/api/category/123")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)                        
+                        .header("X-API-TOKEN", "test")                       
+        ).andExpectAll(
+                status().isBadRequest()
+        ).andDo(result -> {
+                WebResponse<CategoryResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertEquals(false, response.getStatus());
+            assertNotNull(response.getErrors());
+        });
+    }
 }
