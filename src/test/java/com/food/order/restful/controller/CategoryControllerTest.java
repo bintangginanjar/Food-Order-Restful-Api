@@ -210,7 +210,7 @@ public class CategoryControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)                        
                         .header("X-API-TOKEN", "test")                       
         ).andExpectAll(
-                status().isBadRequest()
+                status().isNotFound()
         ).andDo(result -> {
                 WebResponse<CategoryResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
             });

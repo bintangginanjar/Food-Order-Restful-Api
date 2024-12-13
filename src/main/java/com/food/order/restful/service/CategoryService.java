@@ -56,7 +56,7 @@ public class CategoryService {
         }
 
         CategoryEntity category = categoryRepository.findById(categoryId)
-                                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category not found"));
+                                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
 
         return CategoryResponseMapper.ToCategoryResponse(category);
     }
