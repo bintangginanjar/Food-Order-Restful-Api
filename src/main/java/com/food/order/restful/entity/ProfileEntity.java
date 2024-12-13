@@ -42,7 +42,7 @@ public class ProfileEntity {
     @Column(name = "postalcode")
     private String postalCode;
 
-    @OneToOne    
+    @OneToOne
     @JoinColumn(name = "user_id")
     private UserEntity userEntity;
 }
