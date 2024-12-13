@@ -14,7 +14,10 @@ import com.food.order.restful.model.RegisterCategoryRequest;
 import com.food.order.restful.model.UpdateCategoryRequest;
 import com.food.order.restful.repository.CategoryRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class CategoryService {
 
     @Autowired
@@ -69,7 +72,7 @@ public class CategoryService {
         }
         
         CategoryEntity category = categoryRepository.findByNameAndId(request.getName(), categoryId)
-                                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category not found"));
+                                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
 
         CategoryEntity categoryDb = categoryRepository.findByName(request.getName())
                                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category not found"));;
@@ -81,7 +84,7 @@ public class CategoryService {
         category.setName(request.getName());
         categoryRepository.save(category);
 
-        return CategoryResponseMapper.ToCategoryResponse(category);
+        return CategoryResponseMapper.ToCategoryResponse(category);        
     }
 
 }

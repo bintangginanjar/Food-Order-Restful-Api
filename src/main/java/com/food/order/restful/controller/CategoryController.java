@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.food.order.restful.entity.UserEntity;
 import com.food.order.restful.model.CategoryResponse;
 import com.food.order.restful.model.RegisterCategoryRequest;
+import com.food.order.restful.model.UpdateCategoryRequest;
 import com.food.order.restful.model.WebResponse;
 import com.food.order.restful.service.CategoryService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,8 +66,10 @@ public class CategoryController {
     )
     public WebResponse<CategoryResponse> update(UserEntity user, 
                                                 @PathVariable("categoryId") String categoryId, 
-                                                @RequestBody RegisterCategoryRequest request) {
-        CategoryResponse response = categoryService.create(user, request);
+                                                @RequestBody UpdateCategoryRequest request) {
+        request.setId(categoryId);
+
+        CategoryResponse response = categoryService.update(user, request);
 
         return WebResponse.<CategoryResponse>builder()
                                         .status(true)

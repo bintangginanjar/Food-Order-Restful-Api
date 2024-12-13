@@ -16,6 +16,7 @@ import com.food.order.restful.entity.CategoryEntity;
 import com.food.order.restful.entity.UserEntity;
 import com.food.order.restful.model.CategoryResponse;
 import com.food.order.restful.model.RegisterCategoryRequest;
+import com.food.order.restful.model.UpdateCategoryRequest;
 import com.food.order.restful.model.WebResponse;
 import com.food.order.restful.repository.CategoryRepository;
 import com.food.order.restful.repository.ProfileRepository;
@@ -210,6 +211,140 @@ public class CategoryControllerTest {
                         .header("X-API-TOKEN", "test")                       
         ).andExpectAll(
                 status().isBadRequest()
+        ).andDo(result -> {
+                WebResponse<CategoryResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertEquals(false, response.getStatus());
+            assertNotNull(response.getErrors());
+        });
+    }
+
+    @Test
+    void testUpdateCategorySuccess() throws Exception {
+        CategoryEntity category = new CategoryEntity();
+        category.setName("Main Course");
+        categoryRepository.save(category);
+
+        UpdateCategoryRequest request = new UpdateCategoryRequest();
+        request.setName("Main Course");
+
+        mockMvc.perform(
+                put("/api/category/" + category.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)) 
+                        .header("X-API-TOKEN", "test")                       
+        ).andExpectAll(
+                status().isOk()
+        ).andDo(result -> {
+                WebResponse<CategoryResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertEquals(true, response.getStatus());
+            assertNull(response.getErrors());
+            assertEquals(request.getName(), response.getData().getName());
+        });
+    }
+
+    @Test
+    void testUpdateCategoryDuplicate() throws Exception {
+        CategoryEntity mainCourse = new CategoryEntity();
+        mainCourse.setName("Main Course");
+        categoryRepository.save(mainCourse);
+
+        CategoryEntity sideDish = new CategoryEntity();
+        sideDish.setName("Side Dish");
+        categoryRepository.save(sideDish);
+
+        UpdateCategoryRequest request = new UpdateCategoryRequest();
+        request.setName("Side Dish");
+
+        mockMvc.perform(
+                put("/api/category/" + mainCourse.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)) 
+                        .header("X-API-TOKEN", "test")                      
+        ).andExpectAll(
+                status().isBadRequest()
+        ).andDo(result -> {
+                WebResponse<CategoryResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertEquals(false, response.getStatus());
+            assertNotNull(response.getErrors());
+        });
+    }
+
+    @Test
+    void testUpdateCategoryTokenNotSent() throws Exception {
+        CategoryEntity category = new CategoryEntity();
+        category.setName("Main Course");
+        categoryRepository.save(category);
+
+        UpdateCategoryRequest request = new UpdateCategoryRequest();
+        request.setName("Main Course");
+
+        mockMvc.perform(
+                put("/api/category/" + category.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))                                              
+        ).andExpectAll(
+                status().isUnauthorized()
+        ).andDo(result -> {
+                WebResponse<CategoryResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertEquals(false, response.getStatus());
+            assertNotNull(response.getErrors());
+        });
+    }
+
+    @Test
+    void testUpdateCategoryBadId() throws Exception {
+        CategoryEntity category = new CategoryEntity();
+        category.setName("Main Course");
+        categoryRepository.save(category);
+
+        UpdateCategoryRequest request = new UpdateCategoryRequest();
+        request.setName("Main Course");
+
+        mockMvc.perform(
+                put("/api/category/123test")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                        .header("X-API-TOKEN", "test")                                              
+        ).andExpectAll(
+                status().isBadRequest()
+        ).andDo(result -> {
+                WebResponse<CategoryResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertEquals(false, response.getStatus());
+            assertNotNull(response.getErrors());
+        });
+    }
+
+    @Test
+    void testUpdateCategoryNotFound() throws Exception {
+        CategoryEntity category = new CategoryEntity();
+        category.setName("Main Course");
+        categoryRepository.save(category);
+
+        UpdateCategoryRequest request = new UpdateCategoryRequest();
+        request.setName("Main Course");
+
+        mockMvc.perform(
+                put("/api/category/123")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                        .header("X-API-TOKEN", "test")                                              
+        ).andExpectAll(
+                status().isNotFound()
         ).andDo(result -> {
                 WebResponse<CategoryResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
             });
