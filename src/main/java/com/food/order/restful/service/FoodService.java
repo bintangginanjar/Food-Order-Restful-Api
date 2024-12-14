@@ -1,5 +1,6 @@
 package com.food.order.restful.service;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import com.food.order.restful.entity.UserEntity;
 import com.food.order.restful.mapper.FoodResponseMapper;
 import com.food.order.restful.model.FoodResponse;
 import com.food.order.restful.model.RegisterFoodRequest;
+import com.food.order.restful.model.UpdateFoodRequest;
 import com.food.order.restful.repository.CategoryRepository;
 import com.food.order.restful.repository.FoodRepository;
 
@@ -85,5 +87,67 @@ public class FoodService {
                             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Food not found"));
 
         return FoodResponseMapper.ToFoodResponse(food);
+    }
+
+    @Transactional
+    public FoodResponse update(UserEntity user, UpdateFoodRequest request, String strCategoryId, String strFoodId) {
+        validationService.validate(request);
+
+        Integer categoryId;
+        Integer foodId;
+
+        try {
+            categoryId = Integer.parseInt(strCategoryId);
+            foodId = Integer.parseInt(strFoodId);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad category id");
+        }
+
+        CategoryEntity category = categoryRepository.findById(categoryId)
+                                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
+
+        FoodEntity food = foodRepository.findFirstByCategoryEntityAndId(category, foodId)
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Food not found"));
+        
+        if (Objects.nonNull(request.getName())) {
+            food.setName(request.getName());
+        }
+
+        if (Objects.nonNull(request.getName())) {
+            food.setName(request.getName());
+        }
+
+        if (Objects.nonNull(request.getPrice())) {
+            food.setPrice(request.getPrice());
+        }
+
+        if (Objects.nonNull(request.getPhotoUrl())) {
+            food.setPhotoUrl(request.getPhotoUrl());
+        }
+
+        foodRepository.save(food);
+
+        return FoodResponseMapper.ToFoodResponse(food);
+    }
+
+    @Transactional
+    public void delete(UserEntity user, String strCategoryId, String strFoodId) {
+        Integer categoryId;
+        Integer foodId;
+
+        try {
+            categoryId = Integer.parseInt(strCategoryId);
+            foodId = Integer.parseInt(strFoodId);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad category id");
+        }
+
+        CategoryEntity category = categoryRepository.findById(categoryId)
+                                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
+
+        FoodEntity food = foodRepository.findFirstByCategoryEntityAndId(category, foodId)
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Food not found"));
+
+        foodRepository.delete(food);
     }
 }

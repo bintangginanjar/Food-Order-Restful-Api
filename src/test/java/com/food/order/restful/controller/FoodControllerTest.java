@@ -17,6 +17,7 @@ import com.food.order.restful.entity.FoodEntity;
 import com.food.order.restful.entity.UserEntity;
 import com.food.order.restful.model.FoodResponse;
 import com.food.order.restful.model.RegisterFoodRequest;
+import com.food.order.restful.model.UpdateFoodRequest;
 import com.food.order.restful.model.WebResponse;
 import com.food.order.restful.repository.CategoryRepository;
 import com.food.order.restful.repository.FoodRepository;
@@ -24,6 +25,7 @@ import com.food.order.restful.repository.ProfileRepository;
 import com.food.order.restful.repository.UserRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -330,6 +332,333 @@ public class FoodControllerTest {
 
             assertEquals(false, response.getStatus());
             assertNotNull(response.getErrors());
+        });
+    }
+
+    @Test
+    void testUpdateFoodSuccess() throws Exception {
+        CategoryEntity category = categoryRepository.findByName("Main Course").orElse(null);
+
+        FoodEntity food = new FoodEntity();
+        food.setName("Fried rice");
+        food.setPrice(40);
+        food.setPhotoUrl("https://img.freepik.com/free-photo/american-shrimp-fried-rice-served-with-chili-fish-sauce-thai-food_1150-26576.jpg");
+        food.setCategoryEntity(category);
+        foodRepository.save(food);
+
+        UpdateFoodRequest request = new UpdateFoodRequest();
+        request.setName("Beef Fried rice");
+        request.setPrice(45);
+        request.setPhotoUrl("https://img.freepik.com/free-photo/american-shrimp-fried-rice-served-with-chili-fish-sauce-thai-food_1150-26576.jpg");
+
+        mockMvc.perform(
+                patch("/api/categories/" + category.getId() + "/foods/" + food.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)) 
+                        .header("X-API-TOKEN", "test")                       
+        ).andExpectAll(
+                status().isOk()
+        ).andDo(result -> {
+                WebResponse<FoodResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertEquals(true, response.getStatus());
+            assertNull(response.getErrors());
+        });
+    }
+
+    @Test
+    void testUpdateFoodBadCategory() throws Exception {
+        CategoryEntity category = categoryRepository.findByName("Main Course").orElse(null);
+
+        FoodEntity food = new FoodEntity();
+        food.setName("Fried rice");
+        food.setPrice(40);
+        food.setPhotoUrl("https://img.freepik.com/free-photo/american-shrimp-fried-rice-served-with-chili-fish-sauce-thai-food_1150-26576.jpg");
+        food.setCategoryEntity(category);
+        foodRepository.save(food);
+
+        UpdateFoodRequest request = new UpdateFoodRequest();
+        request.setName("Beef Fried rice");
+        request.setPrice(45);
+        request.setPhotoUrl("https://img.freepik.com/free-photo/american-shrimp-fried-rice-served-with-chili-fish-sauce-thai-food_1150-26576.jpg");
+
+        mockMvc.perform(
+                patch("/api/categories/123test/foods/" + food.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)) 
+                        .header("X-API-TOKEN", "test")                       
+        ).andExpectAll(
+                status().isBadRequest()
+        ).andDo(result -> {
+                WebResponse<FoodResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertEquals(false, response.getStatus());
+            assertNotNull(response.getErrors());
+        });
+    }
+
+    @Test
+    void testUpdateFoodCategoryNotFound() throws Exception {
+        CategoryEntity category = categoryRepository.findByName("Main Course").orElse(null);
+
+        FoodEntity food = new FoodEntity();
+        food.setName("Fried rice");
+        food.setPrice(40);
+        food.setPhotoUrl("https://img.freepik.com/free-photo/american-shrimp-fried-rice-served-with-chili-fish-sauce-thai-food_1150-26576.jpg");
+        food.setCategoryEntity(category);
+        foodRepository.save(food);
+
+        UpdateFoodRequest request = new UpdateFoodRequest();
+        request.setName("Beef Fried rice");
+        request.setPrice(45);
+        request.setPhotoUrl("https://img.freepik.com/free-photo/american-shrimp-fried-rice-served-with-chili-fish-sauce-thai-food_1150-26576.jpg");
+
+        mockMvc.perform(
+                patch("/api/categories/123/foods/" + food.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)) 
+                        .header("X-API-TOKEN", "test")                       
+        ).andExpectAll(
+                status().isNotFound()
+        ).andDo(result -> {
+                WebResponse<FoodResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertEquals(false, response.getStatus());
+            assertNotNull(response.getErrors());
+        });
+    }
+
+    @Test
+    void testUpdateFoodBadFood() throws Exception {
+        CategoryEntity category = categoryRepository.findByName("Main Course").orElse(null);
+
+        FoodEntity food = new FoodEntity();
+        food.setName("Fried rice");
+        food.setPrice(40);
+        food.setPhotoUrl("https://img.freepik.com/free-photo/american-shrimp-fried-rice-served-with-chili-fish-sauce-thai-food_1150-26576.jpg");
+        food.setCategoryEntity(category);
+        foodRepository.save(food);
+
+        UpdateFoodRequest request = new UpdateFoodRequest();
+        request.setName("Beef Fried rice");
+        request.setPrice(45);
+        request.setPhotoUrl("https://img.freepik.com/free-photo/american-shrimp-fried-rice-served-with-chili-fish-sauce-thai-food_1150-26576.jpg");
+
+        mockMvc.perform(
+                patch("/api/categories/" + category.getId() + "/foods/123test")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)) 
+                        .header("X-API-TOKEN", "test")                       
+        ).andExpectAll(
+                status().isBadRequest()
+        ).andDo(result -> {
+                WebResponse<FoodResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertEquals(false, response.getStatus());
+            assertNotNull(response.getErrors());
+        });
+    }
+
+    @Test
+    void testUpdateFoodNotFound() throws Exception {
+        CategoryEntity category = categoryRepository.findByName("Main Course").orElse(null);
+
+        FoodEntity food = new FoodEntity();
+        food.setName("Fried rice");
+        food.setPrice(40);
+        food.setPhotoUrl("https://img.freepik.com/free-photo/american-shrimp-fried-rice-served-with-chili-fish-sauce-thai-food_1150-26576.jpg");
+        food.setCategoryEntity(category);
+        foodRepository.save(food);
+
+        UpdateFoodRequest request = new UpdateFoodRequest();
+        request.setName("Beef Fried rice");
+        request.setPrice(45);
+        request.setPhotoUrl("https://img.freepik.com/free-photo/american-shrimp-fried-rice-served-with-chili-fish-sauce-thai-food_1150-26576.jpg");
+
+        mockMvc.perform(
+                patch("/api/categories/" + category.getId() + "/foods/123")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)) 
+                        .header("X-API-TOKEN", "test")                       
+        ).andExpectAll(
+                status().isNotFound()
+        ).andDo(result -> {
+                WebResponse<FoodResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertEquals(false, response.getStatus());
+            assertNotNull(response.getErrors());
+        });
+    }
+
+    @Test
+    void testDeleteFoodSuccess() throws Exception {
+        CategoryEntity category = categoryRepository.findByName("Main Course").orElse(null);
+
+        FoodEntity food = new FoodEntity();
+        food.setName("Fried rice");
+        food.setPrice(40);
+        food.setPhotoUrl("https://img.freepik.com/free-photo/american-shrimp-fried-rice-served-with-chili-fish-sauce-thai-food_1150-26576.jpg");
+        food.setCategoryEntity(category);
+        foodRepository.save(food);
+
+        mockMvc.perform(
+                delete("/api/categories/" + category.getId() + "/foods/" + food.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)                        
+                        .header("X-API-TOKEN", "test")                       
+        ).andExpectAll(
+                status().isOk()
+        ).andDo(result -> {
+                WebResponse<FoodResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertEquals(true, response.getStatus());
+            assertNull(response.getErrors());
+            assertFalse(foodRepository.existsById(food.getId()));
+        });
+    }
+
+    @Test
+    void testDeleteFoodBadCategory() throws Exception {
+        CategoryEntity category = categoryRepository.findByName("Main Course").orElse(null);
+
+        FoodEntity food = new FoodEntity();
+        food.setName("Fried rice");
+        food.setPrice(40);
+        food.setPhotoUrl("https://img.freepik.com/free-photo/american-shrimp-fried-rice-served-with-chili-fish-sauce-thai-food_1150-26576.jpg");
+        food.setCategoryEntity(category);
+        foodRepository.save(food);
+
+        mockMvc.perform(
+                delete("/api/categories/123test/foods/" + food.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)                        
+                        .header("X-API-TOKEN", "test")                       
+        ).andExpectAll(
+                status().isBadRequest()
+        ).andDo(result -> {
+                WebResponse<FoodResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertEquals(false, response.getStatus());
+            assertNotNull(response.getErrors());
+        });
+    }
+
+    @Test
+    void testDeleteFoodCategoryNotFound() throws Exception {
+        CategoryEntity category = categoryRepository.findByName("Main Course").orElse(null);
+
+        FoodEntity food = new FoodEntity();
+        food.setName("Fried rice");
+        food.setPrice(40);
+        food.setPhotoUrl("https://img.freepik.com/free-photo/american-shrimp-fried-rice-served-with-chili-fish-sauce-thai-food_1150-26576.jpg");
+        food.setCategoryEntity(category);
+        foodRepository.save(food);
+
+        mockMvc.perform(
+                delete("/api/categories/123/foods/" + food.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)                        
+                        .header("X-API-TOKEN", "test")                       
+        ).andExpectAll(
+                status().isNotFound()
+        ).andDo(result -> {
+                WebResponse<FoodResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertEquals(false, response.getStatus());
+            assertNotNull(response.getErrors());
+        });
+    }
+
+    @Test
+    void testDeleteFoodBadFood() throws Exception {
+        CategoryEntity category = categoryRepository.findByName("Main Course").orElse(null);
+
+        FoodEntity food = new FoodEntity();
+        food.setName("Fried rice");
+        food.setPrice(40);
+        food.setPhotoUrl("https://img.freepik.com/free-photo/american-shrimp-fried-rice-served-with-chili-fish-sauce-thai-food_1150-26576.jpg");
+        food.setCategoryEntity(category);
+        foodRepository.save(food);
+
+        mockMvc.perform(
+                delete("/api/categories/" + category.getId() + "/foods/123test")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)                        
+                        .header("X-API-TOKEN", "test")                       
+        ).andExpectAll(
+                status().isBadRequest()
+        ).andDo(result -> {
+                WebResponse<FoodResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertEquals(false, response.getStatus());
+            assertNotNull(response.getErrors());
+        });
+    }
+
+    @Test
+    void testDeleteFoodNotFound() throws Exception {
+        CategoryEntity category = categoryRepository.findByName("Main Course").orElse(null);
+
+        FoodEntity food = new FoodEntity();
+        food.setName("Fried rice");
+        food.setPrice(40);
+        food.setPhotoUrl("https://img.freepik.com/free-photo/american-shrimp-fried-rice-served-with-chili-fish-sauce-thai-food_1150-26576.jpg");
+        food.setCategoryEntity(category);
+        foodRepository.save(food);
+
+        mockMvc.perform(
+                delete("/api/categories" + category.getId() + "foods/123")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)                        
+                        .header("X-API-TOKEN", "test")                       
+        ).andExpectAll(
+                status().isNotFound()
+        ).andDo(result -> {
+                WebResponse<FoodResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertEquals(false, response.getStatus());
+            assertNotNull(response.getErrors());
+        });
+    }
+
+    @Test
+    void testDeleteFoodTokenNotSent() throws Exception {
+        CategoryEntity category = categoryRepository.findByName("Main Course").orElse(null);
+
+        FoodEntity food = new FoodEntity();
+        food.setName("Fried rice");
+        food.setPrice(40);
+        food.setPhotoUrl("https://img.freepik.com/free-photo/american-shrimp-fried-rice-served-with-chili-fish-sauce-thai-food_1150-26576.jpg");
+        food.setCategoryEntity(category);
+        foodRepository.save(food);
+
+        mockMvc.perform(
+                delete("/api/categories/" + category.getId() + "/foods/" + food.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)                                                                    
+        ).andExpectAll(
+                status().isUnauthorized()
+        ).andDo(result -> {
+                WebResponse<FoodResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertEquals(false, response.getStatus());
+            assertNotNull(response.getErrors());            
         });
     }
 }

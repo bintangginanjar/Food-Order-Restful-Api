@@ -7,13 +7,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.food.order.restful.entity.UserEntity;
 import com.food.order.restful.model.FoodResponse;
 import com.food.order.restful.model.RegisterFoodRequest;
+import com.food.order.restful.model.UpdateFoodRequest;
 import com.food.order.restful.model.WebResponse;
 import com.food.order.restful.service.FoodService;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 
 
 
@@ -62,4 +65,39 @@ public class FoodController {
                                         .build();
     }
     
+    @PatchMapping(
+        path = "/api/categories/{categoryId}/foods/{foodId}",
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public WebResponse<FoodResponse> update(UserEntity user,
+                                            @RequestBody UpdateFoodRequest request,
+                                            @PathVariable("categoryId") String categoryId,
+                                            @PathVariable("foodId") String foodId) {
+
+        request.setId(foodId);
+
+        FoodResponse response = foodService.update(user, request, categoryId, foodId);
+
+        return WebResponse.<FoodResponse>builder()
+                                        .status(true)
+                                        .messages("Food update success")
+                                        .data(response)
+                                        .build();
+    }
+
+    @DeleteMapping(
+        path = "/api/categories/{categoryId}/foods/{foodId}",        
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public WebResponse<String> delete(UserEntity user,                                     
+                                            @PathVariable("categoryId") String categoryId,
+                                            @PathVariable("foodId") String foodId) {
+        foodService.delete(user, categoryId, foodId);
+
+        return WebResponse.<String>builder()
+                                        .status(true)
+                                        .messages("Food delete success")                                        
+                                        .build();
+    }
 }
