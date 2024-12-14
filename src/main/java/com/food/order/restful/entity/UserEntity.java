@@ -34,7 +34,7 @@ public class UserEntity {
     @Column(name = "token_expired_at")
     private Long tokenExpiredAt;
 
-    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
     private List<OrderEntity> orders;
 
     /*

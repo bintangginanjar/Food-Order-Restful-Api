@@ -77,7 +77,7 @@ public class FoodService {
             categoryId = Integer.parseInt(strCategoryId);
             foodId = Integer.parseInt(strFoodId);
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad category id");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad category id or food id");
         }
 
         CategoryEntity category = categoryRepository.findById(categoryId)

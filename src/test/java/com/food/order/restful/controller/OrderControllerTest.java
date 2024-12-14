@@ -14,7 +14,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.food.order.restful.entity.CategoryEntity;
 import com.food.order.restful.entity.FoodEntity;
+import com.food.order.restful.entity.OrderEntity;
 import com.food.order.restful.entity.UserEntity;
+import com.food.order.restful.model.CreateOrderItemRequest;
 import com.food.order.restful.model.OrderResponse;
 import com.food.order.restful.model.WebResponse;
 import com.food.order.restful.repository.CategoryRepository;
@@ -27,6 +29,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 @EnableWebMvc
 @SpringBootTest
@@ -75,6 +81,8 @@ public class OrderControllerTest {
 
         FoodEntity food = new FoodEntity();
         food.setName("Fried rice");
+        food.setCode(UUID.randomUUID().toString());
+        food.setIsReady(true);
         food.setPrice(40);
         food.setPhotoUrl("https://img.freepik.com/free-photo/american-shrimp-fried-rice-served-with-chili-fish-sauce-thai-food_1150-26576.jpg");
         food.setCategoryEntity(category);
@@ -84,12 +92,78 @@ public class OrderControllerTest {
     @Test
     void testCreateOrderSuccess() throws Exception {                
         mockMvc.perform(
-                post("/api/users/orders")
+                post("/api/orders")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)                        
                         .header("X-API-TOKEN", "test")                       
         ).andExpectAll(
                 status().isOk()
+        ).andDo(result -> {
+                WebResponse<OrderResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertEquals(true, response.getStatus());
+            assertNull(response.getErrors());
+        });
+    }
+
+    @Test
+    void testListOrderSuccess() throws Exception {  
+        UserEntity user = userRepository.findByUsername("test").orElse(null);
+
+        OrderEntity order = new OrderEntity();
+
+        Date date = new Date();
+
+        order.setOrderId(UUID.randomUUID().toString());
+        order.setDate(date.toString());
+        order.setTotalPrice(0);
+        order.setStatus("Pending");
+        order.setUserEntity(user);
+        orderRepository.save(order);
+
+        mockMvc.perform(
+                get("/api/orders")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)                        
+                        .header("X-API-TOKEN", "test")                       
+        ).andExpectAll(
+                status().isOk()
+        ).andDo(result -> {
+                WebResponse<List<OrderResponse>> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertEquals(true, response.getStatus());
+            assertNull(response.getErrors());
+        });
+    }
+
+    @Test
+    void testUpdateOrderItemSuccess() throws Exception {  
+        Date date = new Date(); 
+        UserEntity user = userRepository.findByUsername("test").orElse(null);
+        //CategoryEntity category = categoryRepository.findByName("Main Course").orElse(null);
+        FoodEntity food = foodRepository.findByName("Fried rice").orElse(null);
+
+        OrderEntity order = new OrderEntity();        
+        order.setOrderId(UUID.randomUUID().toString());
+        order.setDate(date.toString());
+        order.setTotalPrice(0);
+        order.setStatus("Pending");
+        order.setUserEntity(user);
+        orderRepository.save(order);
+        
+        CreateOrderItemRequest request = new CreateOrderItemRequest();
+        request.setQuantity(2);        
+        
+        mockMvc.perform(
+                patch("/api/orders/"+ order.getId() + "/food/" + food.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)   
+                        .content(objectMapper.writeValueAsString(request))                     
+                        .header("X-API-TOKEN", "test")                       
+        ).andExpectAll(
+                status().isBadRequest()
         ).andDo(result -> {
                 WebResponse<OrderResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
             });

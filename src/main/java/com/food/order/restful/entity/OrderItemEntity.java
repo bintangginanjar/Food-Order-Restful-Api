@@ -1,6 +1,7 @@
 package com.food.order.restful.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -33,7 +34,7 @@ public class OrderItemEntity {
     @JoinColumn(name = "food_id")
     private FoodEntity foodEntity;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false, referencedColumnName = "id")
     private OrderEntity orderEntity;
 

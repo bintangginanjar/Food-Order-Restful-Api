@@ -14,4 +14,5 @@ public interface FoodRepository extends JpaRepository<FoodEntity, Integer>{
 
     Optional<FoodEntity> findFirstByCategoryEntityAndId(CategoryEntity categoryEntity, Integer foodId);
 
+    Optional<FoodEntity> findFirstById(Integer foodId);
 }
