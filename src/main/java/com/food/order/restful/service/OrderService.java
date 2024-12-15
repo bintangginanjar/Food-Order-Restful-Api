@@ -68,8 +68,7 @@ public class OrderService {
                                             p.getOrderId(),
                                             p.getDate(),
                                             p.getTotalPrice(),
-                                            p.getStatus(),
-                                            p.getOrderItemEntity()
+                                            p.getStatus()                                            
                                         )).collect(Collectors.toList());
         
         return orderList;

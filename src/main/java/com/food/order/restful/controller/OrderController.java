@@ -68,6 +68,8 @@ public class OrderController {
                                                         @PathVariable("orderId") String orderId,
                                                         @PathVariable("foodId") String foodId) {
 
+        request.setOrderId(orderId);
+        request.setFoodId(foodId);
         OrderResponse response = orderService.addItem(user, request, orderId, foodId);
 
         return WebResponse.<OrderResponse>builder()

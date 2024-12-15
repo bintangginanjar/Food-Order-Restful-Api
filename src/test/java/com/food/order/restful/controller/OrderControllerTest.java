@@ -163,7 +163,7 @@ public class OrderControllerTest {
                         .content(objectMapper.writeValueAsString(request))                     
                         .header("X-API-TOKEN", "test")                       
         ).andExpectAll(
-                status().isBadRequest()
+                status().isOk()
         ).andDo(result -> {
                 WebResponse<OrderResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
             });

@@ -27,6 +27,6 @@ public class CategoryEntity {
 
     private String name;
 
-    @OneToMany(mappedBy = "categoryEntity", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "categoryEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FoodEntity> foods;
 }

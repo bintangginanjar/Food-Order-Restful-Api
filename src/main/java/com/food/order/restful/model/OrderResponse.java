@@ -1,9 +1,5 @@
 package com.food.order.restful.model;
 
-import java.util.List;
-
-import com.food.order.restful.entity.OrderItemEntity;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,6 +21,6 @@ public class OrderResponse {
 
     private String status;
 
-    private List<OrderItemEntity> orderItemEntity;
+    //private List<OrderItemEntity> orderItemEntity;
 
 }

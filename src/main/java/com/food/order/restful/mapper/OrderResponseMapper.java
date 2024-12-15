@@ -12,7 +12,7 @@ public class OrderResponseMapper {
                 .date(order.getDate())
                 .totalPrice(order.getTotalPrice())
                 .status(order.getStatus())
-                .orderItemEntity(order.getOrderItemEntity())
+                //.orderItemEntity(order.getOrderItemEntity())
                 .build();
     }
 
