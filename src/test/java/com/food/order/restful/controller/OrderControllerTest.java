@@ -15,17 +15,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.food.order.restful.entity.CategoryEntity;
 import com.food.order.restful.entity.FoodEntity;
 import com.food.order.restful.entity.OrderEntity;
+import com.food.order.restful.entity.OrderItemEntity;
 import com.food.order.restful.entity.UserEntity;
 import com.food.order.restful.model.UpdateOrderItemRequest;
+import com.food.order.restful.model.OrderItemResponse;
 import com.food.order.restful.model.OrderResponse;
 import com.food.order.restful.model.WebResponse;
 import com.food.order.restful.repository.CategoryRepository;
 import com.food.order.restful.repository.FoodRepository;
+import com.food.order.restful.repository.OrderItemRepository;
 import com.food.order.restful.repository.OrderRepository;
 import com.food.order.restful.repository.ProfileRepository;
 import com.food.order.restful.repository.UserRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -49,6 +53,9 @@ public class OrderControllerTest {
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private OrderItemRepository orderItemRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -139,7 +146,7 @@ public class OrderControllerTest {
     }
 
     @Test
-    void testUpdateOrderItemSuccess() throws Exception {  
+    void testUpdateOrderItemAddSuccess() throws Exception {  
         Date date = new Date(); 
         UserEntity user = userRepository.findByUsername("test").orElse(null);
         //CategoryEntity category = categoryRepository.findByName("Main Course").orElse(null);
@@ -170,6 +177,118 @@ public class OrderControllerTest {
 
             assertEquals(true, response.getStatus());
             assertNull(response.getErrors());
+        });
+    }
+
+    @Test
+    void testUpdateOrderItemSubstractSuccess() throws Exception {  
+        Date date = new Date(); 
+        UserEntity user = userRepository.findByUsername("test").orElse(null);
+        //CategoryEntity category = categoryRepository.findByName("Main Course").orElse(null);
+        FoodEntity food = foodRepository.findByName("Fried rice").orElse(null);
+
+        OrderEntity order = new OrderEntity();        
+        order.setOrderId(UUID.randomUUID().toString());
+        order.setDate(date.toString());
+        order.setTotalPrice(0);
+        order.setStatus("Pending");
+        order.setUserEntity(user);
+        orderRepository.save(order);
+        
+        UpdateOrderItemRequest request = new UpdateOrderItemRequest();
+        request.setQuantity(-1);        
+        
+        mockMvc.perform(
+                patch("/api/orders/"+ order.getId() + "/food/" + food.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)   
+                        .content(objectMapper.writeValueAsString(request))                     
+                        .header("X-API-TOKEN", "test")                       
+        ).andExpectAll(
+                status().isOk()
+        ).andDo(result -> {
+                WebResponse<OrderResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertEquals(true, response.getStatus());
+            assertNull(response.getErrors());
+        });
+    }
+
+    @Test
+    void testDeleteOrderItemSuccess() throws Exception {
+        Date date = new Date(); 
+        UserEntity user = userRepository.findByUsername("test").orElse(null);
+        //CategoryEntity category = categoryRepository.findByName("Main Course").orElse(null);
+        FoodEntity food = foodRepository.findByName("Fried rice").orElse(null);
+
+        OrderEntity order = new OrderEntity();        
+        order.setOrderId(UUID.randomUUID().toString());
+        order.setDate(date.toString());
+        order.setTotalPrice(0);
+        order.setStatus("Pending");
+        order.setUserEntity(user);
+        orderRepository.save(order);
+        
+        OrderItemEntity item = new OrderItemEntity();
+        item.setQuantity(2);
+        item.setSubTotal(80);
+        item.setFoodEntity(food);
+        item.setOrderEntity(order);
+        orderItemRepository.save(item);
+        
+        mockMvc.perform(
+                delete("/api/orders/" + order.getId() + "/item/" + item.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)                                               
+                        .header("X-API-TOKEN", "test")                       
+        ).andExpectAll(
+                status().isOk()
+        ).andDo(result -> {
+                WebResponse<OrderResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertEquals(true, response.getStatus());
+            assertNull(response.getErrors());
+            assertFalse(orderItemRepository.existsById(item.getId()));
+        });
+    }
+
+    @Test
+    void testGetOrderItemSuccess() throws Exception {
+        Date date = new Date(); 
+        UserEntity user = userRepository.findByUsername("test").orElse(null);
+        //CategoryEntity category = categoryRepository.findByName("Main Course").orElse(null);
+        FoodEntity food = foodRepository.findByName("Fried rice").orElse(null);
+
+        OrderEntity order = new OrderEntity();
+        order.setOrderId(UUID.randomUUID().toString());
+        order.setDate(date.toString());
+        order.setTotalPrice(0);
+        order.setStatus("Pending");
+        order.setUserEntity(user);
+        orderRepository.save(order);
+        
+        OrderItemEntity item = new OrderItemEntity();
+        item.setQuantity(2);
+        item.setSubTotal(80);
+        item.setFoodEntity(food);
+        item.setOrderEntity(order);
+        orderItemRepository.save(item);
+        
+        mockMvc.perform(
+                get("/api/orders/" + order.getId() + "/items")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)                                               
+                        .header("X-API-TOKEN", "test")                       
+        ).andExpectAll(
+                status().isOk()
+        ).andDo(result -> {
+                WebResponse<List<OrderItemResponse>> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertEquals(true, response.getStatus());
+            assertNull(response.getErrors());            
         });
     }
 }

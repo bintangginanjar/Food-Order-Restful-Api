@@ -75,7 +75,7 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderResponse addItem(UserEntity user, UpdateOrderItemRequest request, String strOrderId, String strFoodId) {
+    public OrderResponse updateItem(UserEntity user, UpdateOrderItemRequest request, String strOrderId, String strFoodId) {
 
         validationService.validate(request);
 
@@ -83,8 +83,8 @@ public class OrderService {
         Integer foodId;
 
         try {
-            orderId = Integer.parseInt(strOrderId);
-            foodId = Integer.parseInt(strFoodId);
+            orderId = Integer.parseInt(request.getOrderId());
+            foodId = Integer.parseInt(request.getFoodId());
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad order id or food id");
         }
@@ -108,5 +108,26 @@ public class OrderService {
         orderRepository.save(order);
 
         return OrderResponseMapper.ToOrderResponse(order);   
+    }
+
+    @Transactional
+    public void deleteItem(UserEntity user, String strOrderId, String strItemId) {        
+        Integer orderId;
+        Integer itemId;
+
+        try {
+            orderId = Integer.parseInt(strOrderId);
+            itemId = Integer.parseInt(strItemId);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad order id or food id");
+        }
+
+        OrderEntity order = orderRepository.findFirstByUserEntityAndId(user, orderId)
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found"));
+        
+        OrderItemEntity item = orderItemRepository.findByOrderEntityAndId(order, itemId)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found"));
+
+        orderItemRepository.delete(item);
     }
 }
