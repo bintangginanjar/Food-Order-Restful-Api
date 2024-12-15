@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.food.order.restful.entity.UserEntity;
-import com.food.order.restful.model.CreateOrderItemRequest;
+import com.food.order.restful.model.UpdateOrderItemRequest;
 import com.food.order.restful.model.OrderResponse;
 import com.food.order.restful.model.WebResponse;
 import com.food.order.restful.service.OrderService;
@@ -64,7 +64,7 @@ public class OrderController {
         produces = MediaType.APPLICATION_JSON_VALUE
     )
     public WebResponse<OrderResponse> updateOrder(UserEntity user,
-                                                        @RequestBody CreateOrderItemRequest request,
+                                                        @RequestBody UpdateOrderItemRequest request,
                                                         @PathVariable("orderId") String orderId,
                                                         @PathVariable("foodId") String foodId) {
 

@@ -16,7 +16,7 @@ import com.food.order.restful.entity.CategoryEntity;
 import com.food.order.restful.entity.FoodEntity;
 import com.food.order.restful.entity.OrderEntity;
 import com.food.order.restful.entity.UserEntity;
-import com.food.order.restful.model.CreateOrderItemRequest;
+import com.food.order.restful.model.UpdateOrderItemRequest;
 import com.food.order.restful.model.OrderResponse;
 import com.food.order.restful.model.WebResponse;
 import com.food.order.restful.repository.CategoryRepository;
@@ -153,7 +153,7 @@ public class OrderControllerTest {
         order.setUserEntity(user);
         orderRepository.save(order);
         
-        CreateOrderItemRequest request = new CreateOrderItemRequest();
+        UpdateOrderItemRequest request = new UpdateOrderItemRequest();
         request.setQuantity(2);        
         
         mockMvc.perform(

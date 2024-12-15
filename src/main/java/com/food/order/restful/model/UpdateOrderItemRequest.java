@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CreateOrderItemRequest {
+public class UpdateOrderItemRequest {
     
     @NotBlank
     @JsonIgnore

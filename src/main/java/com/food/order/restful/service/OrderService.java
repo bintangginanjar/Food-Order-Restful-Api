@@ -16,7 +16,7 @@ import com.food.order.restful.entity.OrderEntity;
 import com.food.order.restful.entity.OrderItemEntity;
 import com.food.order.restful.entity.UserEntity;
 import com.food.order.restful.mapper.OrderResponseMapper;
-import com.food.order.restful.model.CreateOrderItemRequest;
+import com.food.order.restful.model.UpdateOrderItemRequest;
 import com.food.order.restful.model.OrderResponse;
 import com.food.order.restful.repository.FoodRepository;
 import com.food.order.restful.repository.OrderItemRepository;
@@ -75,7 +75,7 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderResponse addItem(UserEntity user, CreateOrderItemRequest request, String strOrderId, String strFoodId) {
+    public OrderResponse addItem(UserEntity user, UpdateOrderItemRequest request, String strOrderId, String strFoodId) {
 
         validationService.validate(request);
 
