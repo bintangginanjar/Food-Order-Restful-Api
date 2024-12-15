@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.food.order.restful.entity.UserEntity;
 import com.food.order.restful.model.UpdateOrderItemRequest;
-import com.food.order.restful.model.OrderItemResponse;
 import com.food.order.restful.model.OrderResponse;
+import com.food.order.restful.model.OrderWithItemResponse;
 import com.food.order.restful.model.WebResponse;
 import com.food.order.restful.service.OrderItemService;
 import com.food.order.restful.service.OrderService;
@@ -26,12 +26,8 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @Autowired
-    private OrderItemService orderItemService;
-
     public OrderController(OrderService orderService, OrderItemService orderItemService) {
-        this.orderService = orderService;
-        this.orderItemService = orderItemService;
+        this.orderService = orderService;        
     }
 
     @PostMapping(
@@ -104,14 +100,14 @@ public class OrderController {
     @GetMapping(
         path = "/api/orders/{orderId}/items",
         produces = MediaType.APPLICATION_JSON_VALUE
-    ) public WebResponse<List<OrderItemResponse>> listItems(UserEntity user,                                                    
+    ) public WebResponse<OrderWithItemResponse<Object>> listItems(UserEntity user,                                                    
                                             @PathVariable("orderId") String orderId) {
 
-        List<OrderItemResponse> responses = orderItemService.listByOrder(user, orderId);
+        OrderWithItemResponse<Object> responses = orderService.get(user, orderId);
 
-        return WebResponse.<List<OrderItemResponse>>builder()
+        return WebResponse.<OrderWithItemResponse<Object>>builder()
                                             .status(true)
-                                            .messages("Delete order item success") 
+                                            .messages("Fetching order success") 
                                             .data(responses)                                          
                                             .build();
     }

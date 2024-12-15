@@ -13,9 +13,7 @@ public class OrderItemResponseMapper {
                     .map(p -> new OrderItemResponse(
                             p.getId(),
                             p.getQuantity(),
-                            p.getSubTotal(),
-                            p.getFoodEntity(),
-                            p.getOrderEntity()                
+                            p.getSubTotal()                                     
                     )).collect(Collectors.toList());
     }
 

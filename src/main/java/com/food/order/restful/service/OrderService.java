@@ -17,7 +17,9 @@ import com.food.order.restful.entity.OrderItemEntity;
 import com.food.order.restful.entity.UserEntity;
 import com.food.order.restful.mapper.OrderResponseMapper;
 import com.food.order.restful.model.UpdateOrderItemRequest;
+import com.food.order.restful.model.OrderItemResponse;
 import com.food.order.restful.model.OrderResponse;
+import com.food.order.restful.model.OrderWithItemResponse;
 import com.food.order.restful.repository.FoodRepository;
 import com.food.order.restful.repository.OrderItemRepository;
 import com.food.order.restful.repository.OrderRepository;
@@ -72,6 +74,39 @@ public class OrderService {
                                         )).collect(Collectors.toList());
         
         return orderList;
+    }
+
+    @Transactional(readOnly = true)
+    public OrderWithItemResponse<Object> get(UserEntity user, String strOrderId) {
+        Integer orderId;        
+
+        try {
+            orderId = Integer.parseInt(strOrderId);            
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad order id");
+        }
+
+        OrderEntity order = orderRepository.findFirstByUserEntityAndId(user, orderId)
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found"));
+
+        List<OrderItemEntity> items = orderItemRepository.findAllByOrderEntity(order);
+
+        List<OrderItemResponse> itemList = items.stream()
+                                                .map(
+                                                    p -> new OrderItemResponse(
+                                                        p.getId(),
+                                                        p.getQuantity(),
+                                                        p.getSubTotal()                                                        
+                                                    )).collect(Collectors.toList());
+
+        return OrderWithItemResponse.builder()
+                                    .id(order.getId())
+                                    .orderId(order.getOrderId())
+                                    .date(order.getDate())
+                                    .totalPrice(order.getTotalPrice())
+                                    .status(order.getStatus())
+                                    .items(itemList)
+                                    .build();
     }
 
     @Transactional

@@ -18,8 +18,8 @@ import com.food.order.restful.entity.OrderEntity;
 import com.food.order.restful.entity.OrderItemEntity;
 import com.food.order.restful.entity.UserEntity;
 import com.food.order.restful.model.UpdateOrderItemRequest;
-import com.food.order.restful.model.OrderItemResponse;
 import com.food.order.restful.model.OrderResponse;
+import com.food.order.restful.model.OrderWithItemResponse;
 import com.food.order.restful.model.WebResponse;
 import com.food.order.restful.repository.CategoryRepository;
 import com.food.order.restful.repository.FoodRepository;
@@ -94,6 +94,15 @@ public class OrderControllerTest {
         food.setPhotoUrl("https://img.freepik.com/free-photo/american-shrimp-fried-rice-served-with-chili-fish-sauce-thai-food_1150-26576.jpg");
         food.setCategoryEntity(category);
         foodRepository.save(food);
+
+        FoodEntity burger = new FoodEntity();
+        burger.setName("Burger");
+        burger.setCode(UUID.randomUUID().toString());
+        burger.setIsReady(true);
+        burger.setPrice(10);
+        burger.setPhotoUrl("https://img.freepik.com/free-photo/american-shrimp-fried-rice-served-with-chili-fish-sauce-thai-food_1150-26576.jpg");
+        burger.setCategoryEntity(category);
+        foodRepository.save(burger);
     }
 
     @Test
@@ -260,11 +269,12 @@ public class OrderControllerTest {
         UserEntity user = userRepository.findByUsername("test").orElse(null);
         //CategoryEntity category = categoryRepository.findByName("Main Course").orElse(null);
         FoodEntity food = foodRepository.findByName("Fried rice").orElse(null);
+        FoodEntity burger = foodRepository.findByName("Burger").orElse(null);
 
         OrderEntity order = new OrderEntity();
         order.setOrderId(UUID.randomUUID().toString());
         order.setDate(date.toString());
-        order.setTotalPrice(0);
+        order.setTotalPrice(90);
         order.setStatus("Pending");
         order.setUserEntity(user);
         orderRepository.save(order);
@@ -275,6 +285,13 @@ public class OrderControllerTest {
         item.setFoodEntity(food);
         item.setOrderEntity(order);
         orderItemRepository.save(item);
+
+        OrderItemEntity side = new OrderItemEntity();
+        side.setQuantity(3);
+        side.setSubTotal(10);
+        side.setFoodEntity(burger);
+        side.setOrderEntity(order);
+        orderItemRepository.save(side);
         
         mockMvc.perform(
                 get("/api/orders/" + order.getId() + "/items")
@@ -282,9 +299,9 @@ public class OrderControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)                                               
                         .header("X-API-TOKEN", "test")                       
         ).andExpectAll(
-                status().isOk()
+                status().isBadRequest()
         ).andDo(result -> {
-                WebResponse<List<OrderItemResponse>> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+                WebResponse<OrderWithItemResponse<Object>> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
             });
 
             assertEquals(true, response.getStatus());
