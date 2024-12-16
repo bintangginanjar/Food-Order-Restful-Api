@@ -17,7 +17,7 @@ public class OrderItemResponse {
 
     private Integer subTotal;
     
-    //private FoodEntity foodEntity;
+    //private Integer foodId;
 
     //private OrderEntity orderEntity;
 }
