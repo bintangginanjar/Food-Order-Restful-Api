@@ -17,3 +17,58 @@ Request Body:
     "name" : "name"
 }
 ```
+
+Response Body:
+```json
+{
+    "username" : "username",    
+    "name" : "name"
+}
+```
+
+### Get Current User
+Endpoint : GET /api/users/current
+
+Request Header :
+
+* X-API-TOKEN : Token (mandatory)
+
+Request Body:
+```json
+{
+    "username" : "username",
+    "password" : "password",
+    "name" : "name"
+}
+```
+
+Response Body:
+```json
+{
+    "username" : "username",    
+    "name" : "name"
+}
+```
+
+### Update User
+Endpoint : PATCH /api/users/current
+
+Request Header :
+
+* X-API-TOKEN : Token (mandatory)
+
+Request Body:
+```json
+{
+    "username" : "username",
+    "password" : "password"    
+}
+```
+
+Response Body:
+```json
+{
+    "username" : "username",    
+    "name" : "name"
+}
+```
