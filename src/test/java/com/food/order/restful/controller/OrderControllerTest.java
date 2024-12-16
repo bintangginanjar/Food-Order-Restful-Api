@@ -301,7 +301,7 @@ public class OrderControllerTest {
         ).andExpectAll(
                 status().isBadRequest()
         ).andDo(result -> {
-                WebResponse<OrderWithItemResponse<Object>> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+                WebResponse<OrderWithItemResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
             });
 
             assertEquals(true, response.getStatus());

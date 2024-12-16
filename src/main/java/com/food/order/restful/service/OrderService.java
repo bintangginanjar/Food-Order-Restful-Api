@@ -15,6 +15,7 @@ import com.food.order.restful.entity.FoodEntity;
 import com.food.order.restful.entity.OrderEntity;
 import com.food.order.restful.entity.OrderItemEntity;
 import com.food.order.restful.entity.UserEntity;
+import com.food.order.restful.mapper.OrderItemResponseMapper;
 import com.food.order.restful.mapper.OrderResponseMapper;
 import com.food.order.restful.model.UpdateOrderItemRequest;
 import com.food.order.restful.model.OrderItemResponse;
@@ -77,7 +78,7 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public OrderWithItemResponse<Object> get(UserEntity user, String strOrderId) {
+    public OrderWithItemResponse get(UserEntity user, String strOrderId) {
         Integer orderId;        
 
         try {
@@ -91,22 +92,9 @@ public class OrderService {
 
         List<OrderItemEntity> items = orderItemRepository.findAllByOrderEntity(order);
 
-        List<OrderItemResponse> itemList = items.stream()
-                                                .map(
-                                                    p -> new OrderItemResponse(
-                                                        p.getId(),
-                                                        p.getQuantity(),
-                                                        p.getSubTotal()                                                        
-                                                    )).collect(Collectors.toList());
+        List<OrderItemResponse> itemList = OrderItemResponseMapper.ToOrderItemResponseList(items);
 
-        return OrderWithItemResponse.builder()
-                                    .id(order.getId())
-                                    .orderId(order.getOrderId())
-                                    .date(order.getDate())
-                                    .totalPrice(order.getTotalPrice())
-                                    .status(order.getStatus())
-                                    .items(itemList)
-                                    .build();
+        return OrderResponseMapper.ToOrderWithItemResponse(order, itemList);
     }
 
     @Transactional

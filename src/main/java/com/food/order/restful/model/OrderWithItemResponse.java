@@ -1,5 +1,7 @@
 package com.food.order.restful.model;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderWithItemResponse<T> {
+public class OrderWithItemResponse {
 
     private Integer id;
     
@@ -21,6 +23,6 @@ public class OrderWithItemResponse<T> {
 
     private String status;
 
-    private T items;
+    private List<OrderItemResponse> items;
 
 }

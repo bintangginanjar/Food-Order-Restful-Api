@@ -15,6 +15,5 @@ public class OrderItemResponseMapper {
                             p.getQuantity(),
                             p.getSubTotal()                                     
                     )).collect(Collectors.toList());
-    }
-
+    }    
 }

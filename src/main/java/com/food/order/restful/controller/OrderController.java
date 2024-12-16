@@ -100,12 +100,12 @@ public class OrderController {
     @GetMapping(
         path = "/api/orders/{orderId}/items",
         produces = MediaType.APPLICATION_JSON_VALUE
-    ) public WebResponse<OrderWithItemResponse<Object>> listItems(UserEntity user,                                                    
+    ) public WebResponse<OrderWithItemResponse> listItems(UserEntity user,                                                    
                                             @PathVariable("orderId") String orderId) {
 
-        OrderWithItemResponse<Object> responses = orderService.get(user, orderId);
+        OrderWithItemResponse responses = orderService.get(user, orderId);
 
-        return WebResponse.<OrderWithItemResponse<Object>>builder()
+        return WebResponse.<OrderWithItemResponse>builder()
                                             .status(true)
                                             .messages("Fetching order success") 
                                             .data(responses)                                          
