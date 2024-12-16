@@ -13,12 +13,16 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.food.order.restful.entity.CategoryEntity;
+import com.food.order.restful.entity.FoodEntity;
 import com.food.order.restful.entity.UserEntity;
 import com.food.order.restful.model.CategoryResponse;
+import com.food.order.restful.model.CategoryWithFoodResponse;
 import com.food.order.restful.model.RegisterCategoryRequest;
 import com.food.order.restful.model.UpdateCategoryRequest;
 import com.food.order.restful.model.WebResponse;
 import com.food.order.restful.repository.CategoryRepository;
+import com.food.order.restful.repository.FoodRepository;
+import com.food.order.restful.repository.OrderRepository;
 import com.food.order.restful.repository.ProfileRepository;
 import com.food.order.restful.repository.UserRepository;
 
@@ -40,6 +44,12 @@ public class CategoryControllerTest {
     private CategoryRepository categoryRepository;
 
     @Autowired
+    private FoodRepository foodRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -50,6 +60,8 @@ public class CategoryControllerTest {
 
     @BeforeEach
     void setUp() {
+        orderRepository.deleteAll();
+        foodRepository.deleteAll();
         categoryRepository.deleteAll();
         profileRepository.deleteAll();
         userRepository.deleteAll();
@@ -351,6 +363,35 @@ public class CategoryControllerTest {
 
             assertEquals(false, response.getStatus());
             assertNotNull(response.getErrors());
+        });
+    }
+
+    @Test
+    void testGetCategoryWithFoodSuccess() throws Exception {
+        CategoryEntity category = new CategoryEntity();
+        category.setName("Main Course");
+        categoryRepository.save(category);
+
+        FoodEntity food = new FoodEntity();
+        food.setName("Fried rice");
+        food.setPrice(40);
+        food.setPhotoUrl("https://img.freepik.com/free-photo/american-shrimp-fried-rice-served-with-chili-fish-sauce-thai-food_1150-26576.jpg");
+        food.setCategoryEntity(category);
+        foodRepository.save(food);
+
+        mockMvc.perform(
+                get("/api/category/" + category.getId() + "/foods")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)                        
+                        .header("X-API-TOKEN", "test")                       
+        ).andExpectAll(
+                status().isOk()
+        ).andDo(result -> {
+                WebResponse<CategoryWithFoodResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertEquals(true, response.getStatus());
+            assertNull(response.getErrors());
         });
     }
 }

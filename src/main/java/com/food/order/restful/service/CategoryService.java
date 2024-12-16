@@ -1,5 +1,8 @@
 package com.food.order.restful.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -7,12 +10,16 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.food.order.restful.entity.CategoryEntity;
+import com.food.order.restful.entity.FoodEntity;
 import com.food.order.restful.entity.UserEntity;
 import com.food.order.restful.mapper.CategoryResponseMapper;
 import com.food.order.restful.model.CategoryResponse;
+import com.food.order.restful.model.CategoryWithFoodResponse;
+import com.food.order.restful.model.FoodResponse;
 import com.food.order.restful.model.RegisterCategoryRequest;
 import com.food.order.restful.model.UpdateCategoryRequest;
 import com.food.order.restful.repository.CategoryRepository;
+import com.food.order.restful.repository.FoodRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,10 +31,14 @@ public class CategoryService {
     private CategoryRepository categoryRepository;
 
     @Autowired
+    private FoodRepository foodRepository;
+
+    @Autowired
     private ValidationService validationService;
 
-    public CategoryService(CategoryRepository categoryRepository, ValidationService validationService) {
+    public CategoryService(CategoryRepository categoryRepository, FoodRepository foodRepository, ValidationService validationService) {
         this.categoryRepository = categoryRepository;
+        this.foodRepository = foodRepository;
         this.validationService = validationService;
     }
 
@@ -85,6 +96,39 @@ public class CategoryService {
         categoryRepository.save(category);
 
         return CategoryResponseMapper.ToCategoryResponse(category);        
+    }
+
+    @Transactional(readOnly = true)
+    public CategoryWithFoodResponse list(UserEntity user, String strCategoryId) {
+        Integer categoryId;
+
+        try {
+            categoryId = Integer.parseInt(strCategoryId);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad category id");
+        }
+
+        CategoryEntity category = categoryRepository.findById(categoryId)
+                                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found"));
+
+        List<FoodEntity> foods = foodRepository.findAllByCategoryEntity(category);
+
+        List<FoodResponse> itemList = foods.stream()
+                                                .map(
+                                                    p -> new FoodResponse(
+                                                        p.getId(),
+                                                        p.getName(),
+                                                        p.getCode(),
+                                                        p.getPrice(),
+                                                        p.getIsReady(),
+                                                        p.getPhotoUrl()                                                      
+                                                    )).collect(Collectors.toList());
+
+        return CategoryWithFoodResponse.builder()
+                                        .id(category.getId())
+                                        .name(category.getName())
+                                        .foods(itemList)
+                                        .build();
     }
 
 }

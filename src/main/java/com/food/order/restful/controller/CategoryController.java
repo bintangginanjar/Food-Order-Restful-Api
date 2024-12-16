@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.food.order.restful.entity.UserEntity;
 import com.food.order.restful.model.CategoryResponse;
+import com.food.order.restful.model.CategoryWithFoodResponse;
 import com.food.order.restful.model.RegisterCategoryRequest;
 import com.food.order.restful.model.UpdateCategoryRequest;
 import com.food.order.restful.model.WebResponse;
@@ -76,5 +77,21 @@ public class CategoryController {
                                         .messages("Category update success")
                                         .data(response)
                                         .build();        
+    }
+
+    @GetMapping(
+        path = "/api/category/{categoryId}/foods",        
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public WebResponse<CategoryWithFoodResponse> list(UserEntity user, 
+                                            @PathVariable("categoryId") String categoryId) {
+        
+        CategoryWithFoodResponse response = categoryService.list(user, categoryId);
+
+        return WebResponse.<CategoryWithFoodResponse>builder()
+                                        .status(true)
+                                        .messages("Category fetching success")
+                                        .data(response)
+                                        .build();
     }
 }

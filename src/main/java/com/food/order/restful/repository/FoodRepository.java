@@ -1,5 +1,6 @@
 package com.food.order.restful.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,4 +16,6 @@ public interface FoodRepository extends JpaRepository<FoodEntity, Integer>{
     Optional<FoodEntity> findFirstByCategoryEntityAndId(CategoryEntity categoryEntity, Integer foodId);
 
     Optional<FoodEntity> findFirstById(Integer foodId);
+
+    List<FoodEntity> findAllByCategoryEntity(CategoryEntity categoryEntity);
 }
