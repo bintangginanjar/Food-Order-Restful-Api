@@ -1,7 +1,6 @@
 package com.food.order.restful.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +12,7 @@ import com.food.order.restful.entity.CategoryEntity;
 import com.food.order.restful.entity.FoodEntity;
 import com.food.order.restful.entity.UserEntity;
 import com.food.order.restful.mapper.CategoryResponseMapper;
+import com.food.order.restful.mapper.FoodResponseMapper;
 import com.food.order.restful.model.CategoryResponse;
 import com.food.order.restful.model.CategoryWithFoodResponse;
 import com.food.order.restful.model.FoodResponse;
@@ -113,22 +113,9 @@ public class CategoryService {
 
         List<FoodEntity> foods = foodRepository.findAllByCategoryEntity(category);
 
-        List<FoodResponse> itemList = foods.stream()
-                                                .map(
-                                                    p -> new FoodResponse(
-                                                        p.getId(),
-                                                        p.getName(),
-                                                        p.getCode(),
-                                                        p.getPrice(),
-                                                        p.getIsReady(),
-                                                        p.getPhotoUrl()                                                      
-                                                    )).collect(Collectors.toList());
+        List<FoodResponse> foodList = FoodResponseMapper.ToFoodResponseList(foods);
 
-        return CategoryWithFoodResponse.builder()
-                                        .id(category.getId())
-                                        .name(category.getName())
-                                        .foods(itemList)
-                                        .build();
+        return CategoryResponseMapper.ToCategoryResponseWithResponse(category, foodList);
     }
 
 }

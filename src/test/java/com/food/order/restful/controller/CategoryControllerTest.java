@@ -32,6 +32,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.UUID;
+
 @EnableWebMvc
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -373,8 +375,10 @@ public class CategoryControllerTest {
         categoryRepository.save(category);
 
         FoodEntity food = new FoodEntity();
+        food.setCode(UUID.randomUUID().toString());
         food.setName("Fried rice");
         food.setPrice(40);
+        food.setIsReady(true);
         food.setPhotoUrl("https://img.freepik.com/free-photo/american-shrimp-fried-rice-served-with-chili-fish-sauce-thai-food_1150-26576.jpg");
         food.setCategoryEntity(category);
         foodRepository.save(food);
