@@ -297,3 +297,42 @@ Response Body:
     }
 }
 ```
+
+### Get Category with its Foods
+Endpoint : GET /api/category/{categoryId}/foods
+
+Request Header :
+* X-API-TOKEN : Token (mandatory)
+
+Request Body: None
+
+Response Body:
+```json
+{
+    "status": true,
+    "messages": "Category fetching success",
+    "errors": null,
+    "data": {
+        "id": 25,
+        "name": "Main Course",
+        "foods": [
+            {
+                "id": 27,
+                "code": "af1b7c05-a108-428b-8feb-53fce3955daa",
+                "name": "Fried rice",
+                "price": 40,
+                "isReady": true,
+                "photoUrl": "https://img.freepik.com/free-photo/american-shrimp-fried-rice-served-with-chili-fish-sauce-thai-food_1150-26576.jpg"
+            },
+            {
+                "id": 28,
+                "code": "3074784c-c7c9-4e65-8f19-6f09e4de0f0c",
+                "name": "Burger",
+                "price": 10,
+                "isReady": true,
+                "photoUrl": "https://img.freepik.com/free-photo/american-shrimp-fried-rice-served-with-chili-fish-sauce-thai-food_1150-26576.jpg"
+            }
+        ]
+    }
+}
+```
