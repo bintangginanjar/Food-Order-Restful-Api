@@ -336,3 +336,113 @@ Response Body:
     }
 }
 ```
+
+## Food Management
+
+### Create Food
+Endpoint : POST /api/categories/{categoryId}/foods
+
+Request Header :
+* X-API-TOKEN : Token (mandatory)
+
+Request Body:
+```json
+{
+    "name" : "Spaghetti Bolognese",
+    "price" : 40,
+    "photoUrl" : "https://img.freepik.com/free-photo/spaghetti-with-bolognese-sauce-wooden-tablexa_123827-22962.jpg"
+}
+```
+
+Response Body:
+```json
+{
+    "status": true,
+    "messages": "Food registration success",
+    "errors": null,
+    "data": {
+        "id": 29,
+        "code": "7360fb86-ff28-4078-b8c7-709caaef2ddf",
+        "name": "Spaghetti Bolognese",
+        "price": 40,
+        "isReady": true,
+        "photoUrl": "https://img.freepik.com/free-photo/spaghetti-with-bolognese-sauce-wooden-tablexa_123827-22962.jpg"
+    }
+}
+```
+
+### Get Food
+Endpoint : GET /api/categories/{categoryId}/foods/{foodId}
+
+Request Header :
+* X-API-TOKEN : Token (mandatory)
+
+Request Body: None
+
+Response Body:
+```json
+{
+    "status": true,
+    "messages": "Food fetching success",
+    "errors": null,
+    "data": {
+        "id": 30,
+        "code": "ef6c1466-3b2e-4976-9699-1c17b435645e",
+        "name": "Croissant",
+        "price": 15,
+        "isReady": true,
+        "photoUrl": "https://img.freepik.com/free-photo/cooking-heap-croissants-table_144627-12959.jpg"
+    }
+}
+```
+
+### Update Food
+Endpoint : PATCH /api/categories/{categoryId}/foods
+
+Request Header :
+* X-API-TOKEN : Token (mandatory)
+
+Request Body:
+```json
+{
+    "id" : "30",
+    "name" : "Cheese Croissant",
+    "price" : 15,
+    "photoUrl" : "https://img.freepik.com/free-photo/cooking-heap-croissants-table_144627-12959.jpg"
+}
+```
+
+Response Body:
+```json
+{
+    "status": true,
+    "messages": "Food update success",
+    "errors": null,
+    "data": {
+        "id": 30,
+        "code": "ef6c1466-3b2e-4976-9699-1c17b435645e",
+        "name": "Cheese Croissant",
+        "price": 15,
+        "isReady": true,
+        "photoUrl": "https://img.freepik.com/free-photo/cooking-heap-croissants-table_144627-12959.jpg"
+    }
+}
+```
+
+### Delete Food
+Endpoint : DELETE /api/categories/{categoryId}/foods
+
+Request Header :
+* X-API-TOKEN : Token (mandatory)
+
+Request Body: None
+
+Response Body:
+```json
+{
+    "status": true,
+    "messages": "Food delete success",
+    "errors": null,
+    "data": null
+}
+```
