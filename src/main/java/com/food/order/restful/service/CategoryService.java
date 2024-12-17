@@ -82,6 +82,10 @@ public class CategoryService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad category id");
         }
         
+        if (categoryRepository.findByNameAndId(request.getName(), categoryId).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category already registered");
+        }
+
         CategoryEntity category = categoryRepository.findById(categoryId)
                                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
         
