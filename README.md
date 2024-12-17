@@ -2,9 +2,9 @@
 
 Feel free to use & modify this API for creating food order.
 
-## User Management
+## 1. User Management
 
-### Create User
+### a. Create User
 Endpoint : POST /api/users
 
 Request Header : None
@@ -30,7 +30,7 @@ Response Body:
 }
 ```
 
-### Get Current User
+### b. Get Current User
 Endpoint : GET /api/users/current
 
 Request Header :
@@ -59,7 +59,7 @@ Response Body:
 }
 ```
 
-### Update User
+### c. Update User
 Endpoint : PATCH /api/users/current
 
 Request Header :
@@ -87,9 +87,9 @@ Response Body:
 }
 ```
 
-## Auth Management
+## 2. Auth Management
 
-### User Login
+### a. User Login
 Endpoint : POST /api/auth/login
 
 Request Header : None
@@ -115,7 +115,7 @@ Response Body:
 }
 ```
 
-### User Logout
+### b. User Logout
 Endpoint : DELETE /api/auth/logout
 
 Request Header :
@@ -138,9 +138,9 @@ Response Body:
     "data": null
 }
 ```
-## Profile Management
+## 3. Profile Management
 
-### Create Profile
+### a. Create Profile
 Endpoint : POST /api/profiles
 
 Request Header :
@@ -181,7 +181,7 @@ Response Body:
 }
 ```
 
-### Update Profile
+### b. Update Profile
 Endpoint : PATCH /api/profiles
 
 Request Header :
@@ -221,9 +221,9 @@ Response Body:
 }
 ```
 
-## Category Management
+## 4. Category Management
 
-### Create Category
+### a. Create Category
 Endpoint : POST /api/categories
 
 Request Header :
@@ -250,7 +250,7 @@ Response Body:
 }
 ```
 
-### Get Category
+### b. Get Category
 Endpoint : GET /api/category/{categoryId}
 
 Request Header :
@@ -271,7 +271,7 @@ Response Body:
 }
 ```
 
-### Update Category
+### c. Update Category
 Endpoint : PUT /api/category/{categoryId}
 
 Request Header :
@@ -298,7 +298,7 @@ Response Body:
 }
 ```
 
-### Get Category with its Foods
+### d. Get Category with its Foods
 Endpoint : GET /api/category/{categoryId}/foods
 
 Request Header :
@@ -337,9 +337,9 @@ Response Body:
 }
 ```
 
-## Food Management
+## 5. Food Management
 
-### Create Food
+### a. Create Food
 Endpoint : POST /api/categories/{categoryId}/foods
 
 Request Header :
@@ -371,7 +371,7 @@ Response Body:
 }
 ```
 
-### Get Food
+### b. Get Food
 Endpoint : GET /api/categories/{categoryId}/foods/{foodId}
 
 Request Header :
@@ -396,7 +396,7 @@ Response Body:
 }
 ```
 
-### Update Food
+### c. Update Food
 Endpoint : PATCH /api/categories/{categoryId}/foods
 
 Request Header :
@@ -429,7 +429,7 @@ Response Body:
 }
 ```
 
-### Delete Food
+### d. Delete Food
 Endpoint : DELETE /api/categories/{categoryId}/foods
 
 Request Header :
