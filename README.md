@@ -12,17 +12,21 @@ Request Header : None
 Request Body:
 ```json
 {
-    "username" : "username",
-    "password" : "password",
-    "name" : "name"
+    "username" : "bintang.ginanjar",
+    "password" : "password"
 }
 ```
 
 Response Body:
 ```json
 {
-    "username" : "username",    
-    "name" : "name"
+    "status": true,
+    "messages": "User registration success",
+    "errors": null,
+    "data": {
+        "username": "bintang.ginanjar",
+        "name": "Bintang Ginanjar"
+    }
 }
 ```
 
@@ -45,8 +49,13 @@ Request Body:
 Response Body:
 ```json
 {
-    "username" : "username",    
-    "name" : "name"
+    "status": true,
+    "messages": "User fetching success",
+    "errors": null,
+    "data": {
+        "username": "bintang.ginanjar",
+        "name": "Bintang Ginanjar"
+    }
 }
 ```
 
@@ -68,8 +77,13 @@ Request Body:
 Response Body:
 ```json
 {
-    "username" : "username",    
-    "name" : "name"
+    "status": true,
+    "messages": "User update success",
+    "errors": null,
+    "data": {
+        "username": "bintang.ginanjar",
+        "name": "Bintang Ginanjar"
+    }
 }
 ```
 
@@ -91,8 +105,13 @@ Request Body:
 Response Body:
 ```json
 {
-    "token" : "token",    
-    "expiredAt" : "expirationdate"
+    "status": null,
+    "messages": null,
+    "errors": null,
+    "data": {
+        "token": "05072151-1c79-48de-b1bb-2d5eaf6f1912",
+        "expiredAt": 1734404530947
+    }
 }
 ```
 
@@ -113,7 +132,9 @@ Request Body:
 Response Body:
 ```json
 {
-    "token" : "token",    
-    "expiredAt" : "expirationdate"
+    "status": true,
+    "messages": "User logout success",
+    "errors": null,
+    "data": null
 }
 ```
