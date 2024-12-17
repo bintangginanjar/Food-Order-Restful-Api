@@ -205,7 +205,7 @@ Response Body:
 ```json
 {
     "status": true,
-    "messages": "Profile registration success",
+    "messages": "Profile update success",
     "errors": null,
     "data": {
         "id": 1,
@@ -217,6 +217,83 @@ Response Body:
         "city": "Bandung",
         "province": "West Java",
         "postalCode": "40254"
+    }
+}
+```
+
+## Category Management
+
+### Create Category
+Endpoint : POST /api/categories
+
+Request Header :
+* X-API-TOKEN : Token (mandatory)
+
+Request Body:
+```json
+{
+    "name" : "Side Dish"    
+
+}
+```
+
+Response Body:
+```json
+{
+    "status": true,
+    "messages": "Category registration success",
+    "errors": null,
+    "data": {
+        "id": 26,
+        "name": "Side Dish"
+    }
+}
+```
+
+### Get Category
+Endpoint : GET /api/category/{categoryId}
+
+Request Header :
+* X-API-TOKEN : Token (mandatory)
+
+Request Body: None
+
+Response Body:
+```json
+{
+    "status": true,
+    "messages": "Category fetching success",
+    "errors": null,
+    "data": {
+        "id": 26,
+        "name": "Side Dish"
+    }
+}
+```
+
+### Update Category
+Endpoint : PUT /api/category/{categoryId}
+
+Request Header :
+* X-API-TOKEN : Token (mandatory)
+
+Request Body:
+```json
+{
+    "id": "26",
+    "name": "Appetizer"    
+}
+```
+
+Response Body:
+```json
+{
+    "status": true,
+    "messages": "Category update success",
+    "errors": null,
+    "data": {
+        "id": 26,
+        "name": "Appetizer"
     }
 }
 ```
