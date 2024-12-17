@@ -83,7 +83,7 @@ public class OrderController {
     }
 
     @DeleteMapping(
-        path = "/api/orders/{orderId}/item/{itemId}",        
+        path = "/api/orders/{orderId}/food/{itemId}",        
         produces = MediaType.APPLICATION_JSON_VALUE
     ) public WebResponse<String> deleteItem(UserEntity user,                                                    
                                     @PathVariable("orderId") String orderId,
@@ -98,7 +98,7 @@ public class OrderController {
     }
 
     @GetMapping(
-        path = "/api/orders/{orderId}/items",
+        path = "/api/orders/{orderId}/foods",
         produces = MediaType.APPLICATION_JSON_VALUE
     ) public WebResponse<OrderWithItemResponse> listItems(UserEntity user,                                                    
                                             @PathVariable("orderId") String orderId) {

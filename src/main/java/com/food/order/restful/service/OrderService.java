@@ -152,5 +152,9 @@ public class OrderService {
                                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found"));
 
         orderItemRepository.delete(item);
+
+        Integer prevTotalPrice = order.getTotalPrice();
+        order.setTotalPrice(prevTotalPrice - item.getSubTotal());        
+        orderRepository.save(order);
     }
 }

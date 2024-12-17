@@ -446,3 +446,174 @@ Response Body:
     "data": null
 }
 ```
+
+## 6. Order Management
+
+### a. Create Order
+Endpoint : POST /api/orders
+
+Request Header :
+* X-API-TOKEN : Token (mandatory)
+
+Request Body: None
+
+Response Body:
+```json
+{
+    "status": true,
+    "messages": "Order creation success",
+    "errors": null,
+    "data": {
+        "id": 18,
+        "orderId": "b3b7f8c1-92a5-4be6-9617-7880bc092358",
+        "date": "Tue Dec 17 23:13:33 WIB 2024",
+        "totalPrice": 0,
+        "status": "Pending"
+    }
+}
+```
+
+### b. Get Order
+Endpoint : GET /api/orders
+
+Request Header :
+* X-API-TOKEN : Token (mandatory)
+
+Request Body: None
+
+Response Body:
+```json
+{
+    "status": true,
+    "messages": "Order list fetching success",
+    "errors": null,
+    "data": [
+        {
+            "id": 18,
+            "orderId": "b3b7f8c1-92a5-4be6-9617-7880bc092358",
+            "date": "Tue Dec 17 23:13:33 WIB 2024",
+            "totalPrice": 0,
+            "status": "Pending"
+        }
+    ]
+}
+```
+
+### c. Get Order
+Endpoint : GET /api/orders/{orderId}/food/{foodId}
+
+Request Header :
+* X-API-TOKEN : Token (mandatory)
+
+Request Body: None
+
+Response Body:
+```json
+{
+    "status": true,
+    "messages": "Order list fetching success",
+    "errors": null,
+    "data": [
+        {
+            "id": 18,
+            "orderId": "b3b7f8c1-92a5-4be6-9617-7880bc092358",
+            "date": "Tue Dec 17 23:13:33 WIB 2024",
+            "totalPrice": 30,
+            "status": "Pending"
+        }
+    ]
+}
+```
+
+### d. Update Order
+Endpoint : PATCH /api/orders/{orderId}/food/{foodId}
+
+Request Header :
+* X-API-TOKEN : Token (mandatory)
+
+Request Body:
+```json
+{
+    "orderId" : "2",
+    "foodId" : "2",
+    "quantity" : "2"
+}
+```
+
+Response Body:
+```json
+{
+    "status": true,
+    "messages": "Update order item success",
+    "errors": null,
+    "data": {
+        "id": 2,
+        "orderId": "90f5f3dd-8309-4cde-95fd-fd321ddcb72f",
+        "date": "Tue Dec 17 23:40:37 WIB 2024",
+        "totalPrice": 20,
+        "status": "Pending"
+    }
+}
+```
+
+### e. Delete Order
+Endpoint : DELETE /api/orders/{orderId}/food/{itemId}
+
+Request Header :
+* X-API-TOKEN : Token (mandatory)
+
+Request Body:
+```json
+{
+    "orderId" : "2",
+    "foodId" : "2",
+    "quantity" : "2"
+}
+```
+
+Response Body:
+```json
+{
+    "status": true,
+    "messages": "Update order item success",
+    "errors": null,
+    "data": {
+        "id": 2,
+        "orderId": "90f5f3dd-8309-4cde-95fd-fd321ddcb72f",
+        "date": "Tue Dec 17 23:40:37 WIB 2024",
+        "totalPrice": 0,
+        "status": "Pending"
+    }
+}
+```
+
+### f. Get Order List with its Items
+Endpoint : GET /api/orders/{orderId}/foods
+
+Request Header :
+* X-API-TOKEN : Token (mandatory)
+
+Request Body: None
+
+Response Body:
+```json
+{
+    "status": true,
+    "messages": "Fetching order success",
+    "errors": null,
+    "data": {
+        "id": 1,
+        "orderId": "f7fa31e1-4450-478e-abab-cfbc762a2bf4",
+        "date": "Tue Dec 17 23:39:56 WIB 2024",
+        "totalPrice": 20,
+        "status": "Pending",
+        "items": [
+            {
+                "id": 1,
+                "quantity": 2,
+                "subTotal": 20
+            }
+        ]
+    }
+}
+```
