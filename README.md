@@ -138,3 +138,85 @@ Response Body:
     "data": null
 }
 ```
+## Profile Management
+
+### Create Profile
+Endpoint : POST /api/profiles
+
+Request Header :
+* X-API-TOKEN : Token (mandatory)
+
+Request Body:
+```json
+{
+    "firstname" : "Bintang",
+    "lastname" : "Ginanjar",
+    "email" : "email@mail.com",
+    "address" : "address",
+    "phoneNumber" : "1234567890",
+    "city" : "Bandung",
+    "province" : "West Java",
+    "postalCode" : "40254"
+
+}
+```
+
+Response Body:
+```json
+{
+    "status": true,
+    "messages": "Profile registration success",
+    "errors": null,
+    "data": {
+        "id": 1,
+        "firstname": "Bintang",
+        "lastname": "Ginanjar",
+        "email": "email@mail.com",
+        "address": "address",
+        "phoneNumber": "1234567890",
+        "city": "Bandung",
+        "province": "West Java",
+        "postalCode": "40254"
+    }
+}
+```
+
+### Update Profile
+Endpoint : PATCH /api/profiles
+
+Request Header :
+* X-API-TOKEN : Token (mandatory)
+
+Request Body:
+```json
+{
+    "firstname" : "Bintang",
+    "lastname" : "Ginanjar",
+    "email" : "email@mail.com",
+    "address" : "address",
+    "phoneNumber" : "1234567890",
+    "city" : "Bandung",
+    "province" : "West Java",
+    "postalCode" : "40254"
+}
+```
+
+Response Body:
+```json
+{
+    "status": true,
+    "messages": "Profile registration success",
+    "errors": null,
+    "data": {
+        "id": 1,
+        "firstname": "Bintang",
+        "lastname": "Ginanjar",
+        "email": "email@mail.com",
+        "address": "address",
+        "phoneNumber": "1234567890",
+        "city": "Bandung",
+        "province": "West Java",
+        "postalCode": "40254"
+    }
+}
+```
