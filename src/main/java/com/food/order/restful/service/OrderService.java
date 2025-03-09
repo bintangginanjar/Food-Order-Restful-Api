@@ -15,8 +15,7 @@ import com.food.order.restful.entity.FoodEntity;
 import com.food.order.restful.entity.OrderEntity;
 import com.food.order.restful.entity.OrderItemEntity;
 import com.food.order.restful.entity.UserEntity;
-import com.food.order.restful.mapper.OrderItemResponseMapper;
-import com.food.order.restful.mapper.OrderResponseMapper;
+import com.food.order.restful.mapper.ResponseMapper;
 import com.food.order.restful.model.UpdateOrderItemRequest;
 import com.food.order.restful.model.OrderItemResponse;
 import com.food.order.restful.model.OrderResponse;
@@ -58,7 +57,7 @@ public class OrderService {
         order.setUserEntity(user);
         orderRepository.save(order);
 
-        return OrderResponseMapper.ToOrderResponse(order);
+        return ResponseMapper.ToOrderResponse(order);
     }
 
     @Transactional(readOnly = true)
@@ -92,9 +91,9 @@ public class OrderService {
 
         List<OrderItemEntity> items = orderItemRepository.findAllByOrderEntity(order);
 
-        List<OrderItemResponse> itemList = OrderItemResponseMapper.ToOrderItemResponseList(items);
+        List<OrderItemResponse> itemList = ResponseMapper.ToOrderItemResponseList(items);
 
-        return OrderResponseMapper.ToOrderWithItemResponse(order, itemList);
+        return ResponseMapper.ToOrderWithItemResponse(order, itemList);
     }
 
     @Transactional
@@ -130,7 +129,7 @@ public class OrderService {
         order.getOrderItemEntity().add(item);
         orderRepository.save(order);
 
-        return OrderResponseMapper.ToOrderResponse(order);   
+        return ResponseMapper.ToOrderResponse(order);   
     }
 
     @Transactional

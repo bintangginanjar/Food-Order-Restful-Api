@@ -69,8 +69,7 @@ public class CategoryControllerTest {
         userRepository.deleteAll();
 
         UserEntity user = new UserEntity();
-        user.setUsername("test");
-        user.setName("Test");
+        user.setEmail("test");        
         user.setPassword(BCrypt.hashpw("123456", BCrypt.gensalt()));
         user.setToken("test");
         user.setTokenExpiredAt(System.currentTimeMillis() + (1000 * 60 * 24 * 1));

@@ -44,9 +44,8 @@ public class AuthControllerTest {
     @Test
     void testLoginSuccess() throws Exception {
         UserEntity user = new UserEntity();
-        user.setUsername("bintang");
-        user.setPassword(BCrypt.hashpw("123456", BCrypt.gensalt()));
-        user.setName("test");
+        user.setEmail("bintang");
+        user.setPassword(BCrypt.hashpw("123456", BCrypt.gensalt()));        
         userRepository.save(user);
 
         LoginUserRequest request = new LoginUserRequest();
@@ -68,7 +67,7 @@ public class AuthControllerTest {
             assertNotNull(response.getData().getToken());
             assertNotNull(response.getData().getExpiredAt());
 
-            UserEntity userDb = userRepository.findByUsername("bintang").orElse(null);
+            UserEntity userDb = userRepository.findByEmail("bintang").orElse(null);
             assertNotNull(userDb);
             assertEquals(userDb.getToken(), response.getData().getToken());
             assertEquals(userDb.getTokenExpiredAt(), response.getData().getExpiredAt());
@@ -99,9 +98,8 @@ public class AuthControllerTest {
     @Test
     void testLoginFailedWrongPassword() throws Exception {
         UserEntity user = new UserEntity();
-        user.setUsername("bintang");
+        user.setEmail("bintang");
         user.setPassword(BCrypt.hashpw("123456", BCrypt.gensalt()));
-        user.setName("test");
         userRepository.save(user);
 
         LoginUserRequest request = new LoginUserRequest();
@@ -126,8 +124,7 @@ public class AuthControllerTest {
     @Test
     void testLogoutSuccess() throws Exception {    
         UserEntity user = new UserEntity();
-        user.setUsername("test");
-        user.setName("Test");
+        user.setEmail("test");
         user.setPassword(BCrypt.hashpw("123456", BCrypt.gensalt()));
         user.setToken("test");
         user.setTokenExpiredAt(System.currentTimeMillis() + (1000 * 60 * 24 * 1));
@@ -146,7 +143,7 @@ public class AuthControllerTest {
             assertNull(response.getErrors());
             assertNotNull("OK", response.getData());
 
-            UserEntity userDb = userRepository.findByUsername("test").orElse(null);
+            UserEntity userDb = userRepository.findByEmail("test").orElse(null);
             assertNotNull(userDb);
             assertNull(userDb.getToken());
             assertNull(userDb.getTokenExpiredAt());

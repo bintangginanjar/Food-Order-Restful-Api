@@ -10,7 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.food.order.restful.entity.ProfileEntity;
 import com.food.order.restful.entity.UserEntity;
-import com.food.order.restful.mapper.ProfileResponseMapper;
+import com.food.order.restful.mapper.ResponseMapper;
 import com.food.order.restful.model.ProfileResponse;
 import com.food.order.restful.model.RegisterProfileRequest;
 import com.food.order.restful.model.UpdateProfileRequest;
@@ -46,7 +46,7 @@ public class ProfileService {
 
         profileRepository.save(profile);
 
-        return ProfileResponseMapper.ToProfileResponseMapper(profile);
+        return ResponseMapper.ToProfileResponseMapper(profile);
     }
 
     @Transactional(readOnly = true)
@@ -54,7 +54,7 @@ public class ProfileService {
         ProfileEntity profile = profileRepository.findByUserEntity(user)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Profile not found"));
 
-        return ProfileResponseMapper.ToProfileResponseMapper(profile);
+        return ResponseMapper.ToProfileResponseMapper(profile);
     }
 
     @Transactional
@@ -98,7 +98,7 @@ public class ProfileService {
 
         profileRepository.save(profile);
 
-        return ProfileResponseMapper.ToProfileResponseMapper(profile);
+        return ResponseMapper.ToProfileResponseMapper(profile);
     }
 
 }

@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.food.order.restful.entity.UserEntity;
-import com.food.order.restful.mapper.UserResponseMapper;
+import com.food.order.restful.mapper.ResponseMapper;
 import com.food.order.restful.model.UpdateUserRequest;
 import com.food.order.restful.model.RegisterUserRequest;
 import com.food.order.restful.model.UserResponse;
@@ -37,25 +37,24 @@ public class UserService {
     public UserResponse create(RegisterUserRequest request) {  
         validationService.validate(request);
         
-        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+        if (userRepository.findByEmail(request.getUsername()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already registered");
         }
 
         UserEntity user = new UserEntity();
-        user.setUsername(request.getUsername());
-        user.setPassword(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()));
-        user.setName(request.getName());
+        user.setEmail(request.getUsername());
+        user.setPassword(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()));        
 
         userRepository.save(user);
 
-        return UserResponseMapper.ToUserResponseMapper(user);
+        return ResponseMapper.ToUserResponseMapper(user);
     }
 
     @Transactional(readOnly = true)
     public UserResponse get(UserEntity user) {
         log.info("USER {}", user);
 
-        return UserResponseMapper.ToUserResponseMapper(user);
+        return ResponseMapper.ToUserResponseMapper(user);
     }
 
     @Transactional
@@ -64,17 +63,13 @@ public class UserService {
 
         log.info("REQUEST {}", request);
 
-        if (Objects.nonNull(request.getName())) {
-            user.setName(request.getName());
-        }
-
         if (Objects.nonNull(request.getPassword())) {
             user.setPassword(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()));
         }
 
         userRepository.save(user);
 
-        return UserResponseMapper.ToUserResponseMapper(user);
+        return ResponseMapper.ToUserResponseMapper(user);
 
     }
 }

@@ -49,8 +49,7 @@ public class ProfileControllerTest {
         userRepository.deleteAll();
 
         UserEntity user = new UserEntity();
-        user.setUsername("test");
-        user.setName("Test");
+        user.setEmail("test");        
         user.setPassword(BCrypt.hashpw("123456", BCrypt.gensalt()));
         user.setToken("test");
         user.setTokenExpiredAt(System.currentTimeMillis() + (1000 * 60 * 24 * 1));
@@ -174,7 +173,7 @@ public class ProfileControllerTest {
 
     @Test
     void testGetProfileSuccess() throws Exception {
-        UserEntity user = userRepository.findByUsername("test").orElse(null);
+        UserEntity user = userRepository.findByEmail("test").orElse(null);
 
         ProfileEntity profile = new ProfileEntity();
         profile.setFirstname("Bintang");
@@ -206,7 +205,7 @@ public class ProfileControllerTest {
 
     @Test
     void testGetProfileInvalidToken() throws Exception {
-        UserEntity user = userRepository.findByUsername("test").orElse(null);
+        UserEntity user = userRepository.findByEmail("test").orElse(null);
 
         ProfileEntity profile = new ProfileEntity();
         profile.setFirstname("Bintang");
@@ -238,7 +237,7 @@ public class ProfileControllerTest {
 
     @Test
     void testGetProfileTokenNotSent() throws Exception {
-        UserEntity user = userRepository.findByUsername("test").orElse(null);
+        UserEntity user = userRepository.findByEmail("test").orElse(null);
 
         ProfileEntity profile = new ProfileEntity();
         profile.setFirstname("Bintang");
@@ -269,7 +268,7 @@ public class ProfileControllerTest {
 
     @Test
     void testUpdateProfileSuccess() throws Exception {
-        UserEntity user = userRepository.findByUsername("test").orElse(null);
+        UserEntity user = userRepository.findByEmail("test").orElse(null);
 
         ProfileEntity profile = new ProfileEntity();
         profile.setFirstname("Bintang");;
@@ -320,7 +319,7 @@ public class ProfileControllerTest {
 
     @Test
     void testUpdateProfileWrongEmail() throws Exception {
-        UserEntity user = userRepository.findByUsername("test").orElse(null);
+        UserEntity user = userRepository.findByEmail("test").orElse(null);
 
         ProfileEntity profile = new ProfileEntity();
         profile.setFirstname("Bintang");;

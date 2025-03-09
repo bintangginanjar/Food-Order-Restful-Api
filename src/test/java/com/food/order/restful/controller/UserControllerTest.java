@@ -92,8 +92,7 @@ public class UserControllerTest {
     @Test
     void testGetUserSuccess() throws Exception {
         UserEntity user = new UserEntity();
-        user.setUsername("test");
-        user.setName("Test");
+        user.setEmail("test");        
         user.setPassword(BCrypt.hashpw("123456", BCrypt.gensalt()));
         user.setToken("test");
         user.setTokenExpiredAt(System.currentTimeMillis() + (1000 * 60 * 24 * 1));
@@ -110,8 +109,7 @@ public class UserControllerTest {
             });
 
             assertNull(response.getErrors());
-            assertEquals("Test", response.getData().getName());
-            assertEquals("test", response.getData().getUsername());
+            assertEquals("Test", response.getData().getEmail());            
         });
     }
 
@@ -149,8 +147,7 @@ public class UserControllerTest {
     @Test
     void testGetUserTokenExpired() throws Exception {
         UserEntity user = new UserEntity();
-        user.setUsername("test");
-        user.setName("Test");
+        user.setEmail("test");        
         user.setPassword(BCrypt.hashpw("123456", BCrypt.gensalt()));
         user.setToken("test");
         user.setTokenExpiredAt(System.currentTimeMillis() - (1000 * 60 * 24 * 1));
@@ -173,8 +170,7 @@ public class UserControllerTest {
     @Test
     void testUpdateUserSuccess() throws Exception {
         UserEntity user = new UserEntity();
-        user.setUsername("test");
-        user.setName("Test");
+        user.setEmail("test");        
         user.setPassword(BCrypt.hashpw("123456", BCrypt.gensalt()));
         user.setToken("test");
         user.setTokenExpiredAt(System.currentTimeMillis() + (1000 * 60 * 24 * 1));
@@ -197,10 +193,9 @@ public class UserControllerTest {
             });
 
             assertNull(response.getErrors());
-            assertEquals("Bintang", response.getData().getName());
-            assertEquals("test", response.getData().getUsername());
+            assertEquals("Bintang", response.getData().getEmail());            
 
-            UserEntity userDb = userRepository.findByUsername("test").orElse(null);
+            UserEntity userDb = userRepository.findByEmail("test").orElse(null);
             assertNotNull(userDb);
             assertTrue(BCrypt.checkpw("567890", userDb.getPassword()));
         });

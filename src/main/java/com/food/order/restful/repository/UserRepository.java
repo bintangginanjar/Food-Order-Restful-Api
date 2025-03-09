@@ -8,7 +8,7 @@ import com.food.order.restful.entity.UserEntity;
 
 public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 
-    Optional<UserEntity> findByUsername(String username);
+    Optional<UserEntity> findByEmail(String email);
 
     Optional<UserEntity> findFirstByToken(String token);
     

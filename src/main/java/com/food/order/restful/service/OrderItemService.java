@@ -11,7 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.food.order.restful.entity.OrderEntity;
 import com.food.order.restful.entity.OrderItemEntity;
 import com.food.order.restful.entity.UserEntity;
-import com.food.order.restful.mapper.OrderItemResponseMapper;
+import com.food.order.restful.mapper.ResponseMapper;
 import com.food.order.restful.model.OrderItemResponse;
 import com.food.order.restful.repository.OrderItemRepository;
 import com.food.order.restful.repository.OrderRepository;
@@ -45,6 +45,6 @@ public class OrderItemService {
 
         List<OrderItemEntity> items = orderItemRepository.findAllByOrderEntity(order);
 
-        return OrderItemResponseMapper.ToOrderItemResponseList(items);
+        return ResponseMapper.ToOrderItemResponseList(items);
     }
 }

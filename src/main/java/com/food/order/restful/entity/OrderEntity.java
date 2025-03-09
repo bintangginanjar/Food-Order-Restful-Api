@@ -1,6 +1,10 @@
 package com.food.order.restful.entity;
 
+import java.util.Date;
 import java.util.List;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -39,7 +43,15 @@ public class OrderEntity {
 
     private String status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @CreationTimestamp
+    @Column(updatable = false, name = "created_at")
+    private Date createdAt;
+
+    @UpdateTimestamp
+    @Column(updatable = true, name = "updated_at")
+    private Date updatedAt;
+
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
     private UserEntity userEntity;
 

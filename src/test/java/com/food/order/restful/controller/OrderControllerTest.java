@@ -75,8 +75,7 @@ public class OrderControllerTest {
         userRepository.deleteAll();
 
         UserEntity user = new UserEntity();
-        user.setUsername("test");
-        user.setName("Test");
+        user.setEmail("test");
         user.setPassword(BCrypt.hashpw("123456", BCrypt.gensalt()));
         user.setToken("test");
         user.setTokenExpiredAt(System.currentTimeMillis() + (1000 * 60 * 24 * 1));
@@ -125,7 +124,7 @@ public class OrderControllerTest {
 
     @Test
     void testListOrderSuccess() throws Exception {  
-        UserEntity user = userRepository.findByUsername("test").orElse(null);
+        UserEntity user = userRepository.findByEmail("test").orElse(null);
 
         OrderEntity order = new OrderEntity();
 
@@ -157,7 +156,7 @@ public class OrderControllerTest {
     @Test
     void testUpdateOrderItemAddSuccess() throws Exception {  
         Date date = new Date(); 
-        UserEntity user = userRepository.findByUsername("test").orElse(null);
+        UserEntity user = userRepository.findByEmail("test").orElse(null);
         //CategoryEntity category = categoryRepository.findByName("Main Course").orElse(null);
         FoodEntity food = foodRepository.findByName("Fried rice").orElse(null);
 
@@ -192,7 +191,7 @@ public class OrderControllerTest {
     @Test
     void testUpdateOrderItemSubstractSuccess() throws Exception {  
         Date date = new Date(); 
-        UserEntity user = userRepository.findByUsername("test").orElse(null);
+        UserEntity user = userRepository.findByEmail("test").orElse(null);
         //CategoryEntity category = categoryRepository.findByName("Main Course").orElse(null);
         FoodEntity food = foodRepository.findByName("Fried rice").orElse(null);
 
@@ -227,7 +226,7 @@ public class OrderControllerTest {
     @Test
     void testDeleteOrderItemSuccess() throws Exception {
         Date date = new Date(); 
-        UserEntity user = userRepository.findByUsername("test").orElse(null);
+        UserEntity user = userRepository.findByEmail("test").orElse(null);
         //CategoryEntity category = categoryRepository.findByName("Main Course").orElse(null);
         FoodEntity food = foodRepository.findByName("Fried rice").orElse(null);
 
@@ -266,7 +265,7 @@ public class OrderControllerTest {
     @Test
     void testGetOrderItemSuccess() throws Exception {
         Date date = new Date(); 
-        UserEntity user = userRepository.findByUsername("test").orElse(null);
+        UserEntity user = userRepository.findByEmail("test").orElse(null);
         //CategoryEntity category = categoryRepository.findByName("Main Course").orElse(null);
         FoodEntity food = foodRepository.findByName("Fried rice").orElse(null);
         FoodEntity burger = foodRepository.findByName("Burger").orElse(null);

@@ -11,8 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.food.order.restful.entity.CategoryEntity;
 import com.food.order.restful.entity.FoodEntity;
 import com.food.order.restful.entity.UserEntity;
-import com.food.order.restful.mapper.CategoryResponseMapper;
-import com.food.order.restful.mapper.FoodResponseMapper;
+import com.food.order.restful.mapper.ResponseMapper;
 import com.food.order.restful.model.CategoryResponse;
 import com.food.order.restful.model.CategoryWithFoodResponse;
 import com.food.order.restful.model.FoodResponse;
@@ -53,7 +52,7 @@ public class CategoryService {
         category.setName(request.getName());
         categoryRepository.save(category);
 
-        return CategoryResponseMapper.ToCategoryResponse(category);
+        return ResponseMapper.ToCategoryResponse(category);
     }
 
     @Transactional(readOnly = true)
@@ -69,7 +68,7 @@ public class CategoryService {
         CategoryEntity category = categoryRepository.findById(categoryId)
                                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
 
-        return CategoryResponseMapper.ToCategoryResponse(category);
+        return ResponseMapper.ToCategoryResponse(category);
     }
 
     @Transactional
@@ -92,7 +91,7 @@ public class CategoryService {
         category.setName(request.getName());
         categoryRepository.save(category);
 
-        return CategoryResponseMapper.ToCategoryResponse(category);        
+        return ResponseMapper.ToCategoryResponse(category);        
     }
 
     @Transactional(readOnly = true)
@@ -110,9 +109,9 @@ public class CategoryService {
 
         List<FoodEntity> foods = foodRepository.findAllByCategoryEntity(category);
 
-        List<FoodResponse> foodList = FoodResponseMapper.ToFoodResponseList(foods);
+        List<FoodResponse> foodList = ResponseMapper.ToFoodResponseList(foods);
 
-        return CategoryResponseMapper.ToCategoryResponseWithResponse(category, foodList);
+        return ResponseMapper.ToCategoryResponseWithResponse(category, foodList);
     }
 
 }

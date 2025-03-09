@@ -12,7 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.food.order.restful.entity.CategoryEntity;
 import com.food.order.restful.entity.FoodEntity;
 import com.food.order.restful.entity.UserEntity;
-import com.food.order.restful.mapper.FoodResponseMapper;
+import com.food.order.restful.mapper.ResponseMapper;
 import com.food.order.restful.model.FoodResponse;
 import com.food.order.restful.model.RegisterFoodRequest;
 import com.food.order.restful.model.UpdateFoodRequest;
@@ -65,7 +65,7 @@ public class FoodService {
         food.setCategoryEntity(category);
         foodRepository.save(food);
 
-        return FoodResponseMapper.ToFoodResponse(food);
+        return ResponseMapper.ToFoodResponse(food);
     }
 
     @Transactional(readOnly = true)
@@ -86,7 +86,7 @@ public class FoodService {
         FoodEntity food = foodRepository.findFirstByCategoryEntityAndId(category, foodId)
                             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Food not found"));
 
-        return FoodResponseMapper.ToFoodResponse(food);
+        return ResponseMapper.ToFoodResponse(food);
     }
 
     @Transactional
@@ -127,7 +127,7 @@ public class FoodService {
 
         foodRepository.save(food);
 
-        return FoodResponseMapper.ToFoodResponse(food);
+        return ResponseMapper.ToFoodResponse(food);
     }
 
     @Transactional
